@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHQ HRMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Prompt', sans-serif; background-color: #f3f4f6; }
+        .page-section { display: none; }
+        .page-active { display: block; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden text-gray-800">
+
+    <div id="login-section" class="page-section page-active absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 z-50 flex items-center justify-center">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md">
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-fingerprint text-5xl text-indigo-600 mb-2"></i>
+                <h2 class="text-3xl font-bold">SmartHQ</h2>
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <input type="text" id="empId" required placeholder="รหัสพนักงาน" class="w-full mb-4 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500">
+                <input type="password" id="password" required placeholder="รหัสผ่าน" class="w-full mb-6 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition">เข้าสู่ระบบ</button>
+                <p class="text-center mt-4 text-sm">ไม่มีบัญชี? <button type="button" onclick="toggleAuth()" class="text-indigo-600 font-bold hover:underline">สมัครสมาชิก</button></p>
+            </form>
+
+            <form id="registerForm" onsubmit="handleRegister(event)" class="hidden">
+                <input type="text" id="regEmpId" required placeholder="รหัสพนักงาน" class="w-full mb-3 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="regName" required placeholder="ชื่อ-นามสกุล" class="w-full mb-3 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="regDept" required placeholder="แผนก" class="w-full mb-3 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500">
+                <input type="password" id="regPassword" required placeholder="รหัสผ่าน" class="w-full mb-6 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition">สมัครสมาชิก</button>
+                <p class="text-center mt-4 text-sm"><button type="button" onclick="toggleAuth()" class="text-gray-500 hover:underline">กลับไปเข้าสู่ระบบ</button></p>
+            </form>
+        </div>
+    </div>
+
+    <aside class="w-64 bg-white shadow-xl hidden md:flex flex-col z-20">
+        <div class="p-6 text-2xl font-bold text-indigo-700 border-b"><i class="fa-solid fa-layer-group mr-2"></i>SmartHQ</div>
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <button onclick="navigate('dashboard')" class="w-full text-left p-3 rounded-xl hover:bg-indigo-50"><i class="fa-solid fa-house w-6"></i> หน้าแรก</button>
+            <button onclick="navigate('leave')" class="w-full text-left p-3 rounded-xl hover:bg-indigo-50"><i class="fa-solid fa-calendar-minus w-6"></i> ลาออนไลน์</button>
+            <button onclick="navigate('late')" class="w-full text-left p-3 rounded-xl hover:bg-indigo-50"><i class="fa-solid fa-clock w-6"></i> ขอเข้าสาย</button>
+            <button onclick="navigate('profile')" class="w-full text-left p-3 rounded-xl hover:bg-indigo-50"><i class="fa-solid fa-user w-6"></i> โปรไฟล์</button>
+            <button onclick="navigate('news')" class="w-full text-left p-3 rounded-xl hover:bg-indigo-50"><i class="fa-solid fa-newspaper w-6"></i> ข่าวสาร</button>
+            <button id="menu-approval" onclick="navigate('approval')" class="w-full text-left p-3 rounded-xl hover:bg-indigo-50 hidden text-green-600 font-bold"><i class="fa-solid fa-check-double w-6"></i> อนุมัติคำขอ</button>
+            <button id="menu-admin" onclick="navigate('admin')" class="w-full text-left p-3 rounded-xl hover:bg-indigo-50 hidden text-red-600 font-bold"><i class="fa-solid fa-shield-halved w-6"></i> จัดการระบบ</button>
+            <button onclick="logout()" class="w-full text-left p-3 rounded-xl hover:bg-red-50 text-gray-400 mt-10"><i class="fa-solid fa-sign-out-alt w-6"></i> ออกจากระบบ</button>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto relative">
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 px-6 py-4 flex justify-between items-center shadow-sm">
+            <div class="md:hidden font-bold text-indigo-700">SmartHQ</div>
+            <div class="hidden md:block font-bold text-gray-600" id="topbarTitle">Dashboard</div>
+            <div class="flex items-center gap-3">
+                <div class="text-right"><p class="text-sm font-bold" id="topName">-</p><p class="text-xs text-indigo-500" id="topRole">-</p></div>
+                <img id="topAvatar" src="https://ui-avatars.com/api/?name=U&background=6366f1&color=fff" class="w-10 h-10 rounded-full">
+            </div>
+        </header>
+
+        <div class="p-6 max-w-7xl mx-auto w-full">
+            
+            <section id="page-dashboard" class="page-section">
+                <div class="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-8 text-white flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-5xl font-bold" id="currentTime">00:00:00</h1>
+                        <p class="text-indigo-200 mt-2"><i class="fa-solid fa-location-dot"></i> ระบบบันทึกพิกัด GPS อัตโนมัติ</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="handleCheck('Check-In')" class="bg-white text-indigo-700 font-bold py-4 px-8 rounded-2xl shadow-lg hover:scale-105 transition"><i class="fa-solid fa-sign-in-alt mr-2"></i>เข้างาน</button>
+                        <button onclick="handleCheck('Check-Out')" class="bg-indigo-900/50 border border-indigo-400 font-bold py-4 px-8 rounded-2xl hover:scale-105 transition"><i class="fa-solid fa-sign-out-alt mr-2"></i>ออกงาน</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-leave" class="page-section">
+                <h2 class="text-2xl font-bold mb-6"><i class="fa-solid fa-calendar-minus text-indigo-600 mr-2"></i> ลาออนไลน์</h2>
+                <div class="bg-white p-6 rounded-2xl shadow border mb-6 flex gap-8">
+                    <div><p class="text-sm text-gray-500">พักร้อนคงเหลือ</p><p class="text-3xl font-bold text-blue-600" id="lblVacation">-</p></div>
+                    <div><p class="text-sm text-gray-500">ลากิจคงเหลือ</p><p class="text-3xl font-bold text-yellow-600" id="lblPersonal">-</p></div>
+                </div>
+                <form onsubmit="handleLeaveSubmit(event)" class="bg-white p-6 rounded-2xl shadow border">
+                    <select id="lvType" required class="w-full mb-4 p-3 border rounded-xl"><option value="">-- ประเภทการลา --</option><option value="ลาพักร้อน">ลาพักร้อน</option><option value="ลากิจ">ลากิจ</option><option value="ลาป่วย">ลาป่วย</option></select>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <input type="date" id="lvStart" required class="p-3 border rounded-xl">
+                        <input type="date" id="lvEnd" required class="p-3 border rounded-xl">
+                    </div>
+                    <textarea id="lvReason" required placeholder="เหตุผล" rows="3" class="w-full mb-4 p-3 border rounded-xl"></textarea>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700">ส่งคำขอลา</button>
+                </form>
+            </section>
+
+            <section id="page-late" class="page-section">
+                <h2 class="text-2xl font-bold mb-6"><i class="fa-solid fa-clock text-indigo-600 mr-2"></i> ขอเข้าสาย</h2>
+                <p class="text-red-500 text-sm mb-4">*เงื่อนไข: เดือน 1 ไม่เกิน 2 ครั้ง, สัปดาห์ไม่เกิน 1 ครั้ง</p>
+                <form onsubmit="handleLateSubmit(event)" class="bg-white p-6 rounded-2xl shadow border">
+                    <input type="date" id="ltDate" required class="w-full mb-4 p-3 border rounded-xl">
+                    <textarea id="ltReason" required placeholder="เหตุผล" rows="3" class="w-full mb-4 p-3 border rounded-xl"></textarea>
+                    <button type="submit" class="w-full bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600">ยื่นขอเข้าสาย</button>
+                </form>
+            </section>
+
+            <section id="page-approval" class="page-section">
+                <h2 class="text-2xl font-bold mb-6"><i class="fa-solid fa-check-double text-indigo-600 mr-2"></i> อนุมัติคำขอ</h2>
+                <div class="bg-white rounded-2xl shadow overflow-hidden border">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50"><tr><th class="p-4">พนักงาน</th><th class="p-4">ประเภท</th><th class="p-4">วันที่</th><th class="p-4">เหตุผล</th><th class="p-4 text-center">จัดการ</th></tr></thead>
+                        <tbody id="tbApproval"><tr><td colspan="5" class="p-8 text-center">กำลังโหลด...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="page-profile" class="page-section">
+                <h2 class="text-2xl font-bold mb-6"><i class="fa-solid fa-user text-indigo-600 mr-2"></i> โปรไฟล์ส่วนตัว</h2>
+                <form onsubmit="handleProfileUpdate(event)" class="bg-white p-6 rounded-2xl shadow border">
+                    <input type="text" id="pfEmpId" readonly class="w-full mb-4 p-3 bg-gray-100 border rounded-xl cursor-not-allowed">
+                    <input type="text" id="pfName" required class="w-full mb-4 p-3 border rounded-xl">
+                    <input type="text" id="pfDept" required class="w-full mb-4 p-3 border rounded-xl">
+                    <input type="password" id="pfPassword" placeholder="รหัสผ่านใหม่ (ถ้าต้องการเปลี่ยน)" class="w-full mb-6 p-3 border rounded-xl">
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700">บันทึกข้อมูล</button>
+                </form>
+            </section>
+
+            <section id="page-news" class="page-section">
+                <h2 class="text-2xl font-bold mb-6"><i class="fa-solid fa-newspaper text-indigo-600 mr-2"></i> ข่าวสาร & วันหยุด</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 space-y-4" id="divNews">โหลดข่าวสาร...</div>
+                    <div class="bg-white p-6 rounded-2xl shadow border h-fit sticky top-6">
+                        <h3 class="font-bold border-b pb-2 mb-4 text-red-500">วันหยุดบริษัท</h3>
+                        <ul id="divHolidays" class="space-y-3"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-admin" class="page-section">
+                <h2 class="text-2xl font-bold mb-6"><i class="fa-solid fa-users-cog text-indigo-600 mr-2"></i> จัดการพนักงาน</h2>
+                <div class="bg-white rounded-2xl shadow overflow-hidden border overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead class="bg-indigo-50 text-indigo-800"><tr><th class="p-4">ID</th><th class="p-4">ชื่อ</th><th class="p-4">แผนก</th><th class="p-4">สิทธิ์</th><th class="p-4">โควต้า</th><th class="p-4">สถานะ</th><th class="p-4 text-center">จัดการ</th></tr></thead>
+                        <tbody id="tbAdmin"><tr><td colspan="7" class="p-8 text-center">กำลังโหลด...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // === 1. CONFIGURATION ===
+        const GAS_URL = "ใส่_URL_WEBAPP_ของคุณตรงนี้"; 
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyA898_Q3mtKBETkUwY-v-wrIpDQ6LUafvg",
+            authDomain: "smartofficeapp-32e0a.firebaseapp.com",
+            projectId: "smartofficeapp-32e0a",
+            storageBucket: "smartofficeapp-32e0a.firebasestorage.app",
+            messagingSenderId: "412226486577",
+            appId: "1:412226486577:web:212028f120d1d940157010"
+        };
+        const VAPID_KEY = "BE30uQtKhXTKAHEcAdUfpIUhwz0wiwyAX-Ea5yXEM7CPB0SdZiYHzxZfqqeea1gLN7GgGlEn4i0nTwoKE7Zwj08";
+
+        // === 2. FIREBASE PUSH NOTIFICATION INIT ===
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        messaging.onMessage((payload) => {
+            Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: payload.notification.title, text: payload.notification.body, showConfirmButton: false, timer: 5000 });
+        });
+
+        async function initNotifications(empId) {
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    const token = await messaging.getToken({ vapidKey: VAPID_KEY });
+                    if(token) fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "saveFcmToken", empId: empId, token: token }) });
+                }
+            } catch (e) { console.log('Notification Error', e); }
+        }
+
+        // === 3. CORE LOGIC ===
+        window.onload = () => {
+            const saved = localStorage.getItem('smartOfficeUser');
+            if(saved) setupDashboard(JSON.parse(saved));
+            
+            setInterval(() => {
+                document.getElementById('currentTime').innerText = new Date().toLocaleTimeString('th-TH');
+            }, 1000);
+        };
+
+        function toggleAuth() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('registerForm').classList.toggle('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('smartOfficeUser');
+            location.reload();
+        }
+
+        function setupDashboard(user) {
+            document.getElementById('login-section').classList.remove('page-active');
+            document.getElementById('topName').innerText = user.name;
+            document.getElementById('topRole').innerText = user.role;
+            document.getElementById('topAvatar').src = `https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`;
+            
+            if(['Manager', 'HR', 'Admin'].includes(user.role)) document.getElementById('menu-approval').classList.remove('hidden');
+            if(user.role === 'Admin') document.getElementById('menu-admin').classList.remove('hidden');
+            
+            navigate('dashboard');
+        }
+
+        function navigate(page) {
+            document.querySelectorAll('.page-section').forEach(e => e.classList.remove('page-active'));
+            document.getElementById(`page-${page}`).classList.add('page-active');
+            
+            const user = JSON.parse(localStorage.getItem('smartOfficeUser'));
+            if(page === 'leave') { document.getElementById('lblVacation').innerText = user.leaveVacation; document.getElementById('lblPersonal').innerText = user.leavePersonal; }
+            if(page === 'profile') { document.getElementById('pfEmpId').value = user.empId; document.getElementById('pfName').value = user.name; document.getElementById('pfDept').value = user.department; document.getElementById('pfPassword').value = ''; }
+            if(page === 'approval') loadPendingApprovals();
+            if(page === 'news') loadNews();
+            if(page === 'admin') loadAdminUsers();
+        }
+
+        // === 4. API CALLS ===
+        async function req(data) {
+            const isGet = data.action.startsWith('get');
+            const options = isGet ? {} : { method: 'POST', body: JSON.stringify(data) };
+            const url = isGet ? `${GAS_URL}?action=${data.action}` : GAS_URL;
+            Swal.showLoading();
+            try {
+                const res = await fetch(url, options);
+                return await res.json();
+            } catch(e) { Swal.fire('Error', 'Connection failed', 'error'); throw e; }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault(); Swal.fire({title:'Loading...', allowOutsideClick:false});
+            const res = await req({ action: "login", empId: document.getElementById('empId').value, password: document.getElementById('password').value });
+            if(res.status === 'success') {
+                localStorage.setItem('smartOfficeUser', JSON.stringify(res.userData));
+                Swal.close(); setupDashboard(res.userData); initNotifications(res.userData.empId);
+            } else Swal.fire('Error', res.message, 'error');
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault(); Swal.fire({title:'Saving...', allowOutsideClick:false});
+            const res = await req({ action: "register", empId: document.getElementById('regEmpId').value, name: document.getElementById('regName').value, department: document.getElementById('regDept').value, password: document.getElementById('regPassword').value });
+            if(res.status === 'success') Swal.fire('สำเร็จ', res.message, 'success').then(toggleAuth);
+            else Swal.fire('Error', res.message, 'error');
+        }
+
+        async function handleCheck(type) {
+            if(!navigator.geolocation) return Swal.fire('Error','GPS not supported','error');
+            Swal.fire({title:'กำลังจับพิกัด...', allowOutsideClick:false}); Swal.showLoading();
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const user = JSON.parse(localStorage.getItem('smartOfficeUser'));
+                const res = await req({ action: "checkInOut", empId: user.empId, type: type, lat: pos.coords.latitude, lng: pos.coords.longitude });
+                Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status);
+            }, () => Swal.fire('Error','Please enable GPS','error'), {enableHighAccuracy: true});
+        }
+
+        async function handleLeaveSubmit(e) {
+            e.preventDefault();
+            const user = JSON.parse(localStorage.getItem('smartOfficeUser'));
+            const res = await req({ action: "submitLeave", empId: user.empId, leaveType: document.getElementById('lvType').value, startDate: document.getElementById('lvStart').value, endDate: document.getElementById('lvEnd').value, reason: document.getElementById('lvReason').value });
+            Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status); document.getElementById('lvType').parentElement.reset();
+        }
+
+        async function handleLateSubmit(e) {
+            e.preventDefault();
+            const user = JSON.parse(localStorage.getItem('smartOfficeUser'));
+            const res = await req({ action: "submitLate", empId: user.empId, date: document.getElementById('ltDate').value, reason: document.getElementById('ltReason').value });
+            Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status==='success'?'success':'warning');
+        }
+
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+            const res = await req({ action: "updateProfile", empId: document.getElementById('pfEmpId').value, password: document.getElementById('pfPassword').value, name: document.getElementById('pfName').value, department: document.getElementById('pfDept').value });
+            if(res.status === 'success') {
+                localStorage.setItem('smartOfficeUser', JSON.stringify(res.userData));
+                Swal.fire('สำเร็จ', res.message, 'success'); setupDashboard(res.userData);
+            } else Swal.fire('Error', res.message, 'error');
+        }
+
+        // === 5. RENDER FUNCTIONS ===
+        async function loadPendingApprovals() {
+            const res = await req({ action: "getPendingApprovals" }); Swal.close();
+            const tb = document.getElementById('tbApproval');
+            if(!res.leaves.length && !res.lates.length) return tb.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-green-500">ไม่มีรายการรออนุมัติ</td></tr>';
+            
+            tb.innerHTML = [...res.leaves, ...res.lates].map(i => `
+                <tr class="border-b">
+                    <td class="p-4">${i.empId}</td><td class="p-4"><span class="${i.type==='ขอเข้าสาย'?'bg-red-100 text-red-600':'bg-blue-100 text-blue-600'} px-2 py-1 rounded text-xs">${i.type}</span></td>
+                    <td class="p-4">${i.date}</td><td class="p-4">${i.reason}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="approve('${i.sheetName}', ${i.row}, ${i.col}, 'Approved')" class="bg-green-500 text-white p-2 rounded mr-1"><i class="fa-solid fa-check"></i></button>
+                        <button onclick="approve('${i.sheetName}', ${i.row}, ${i.col}, 'Rejected')" class="bg-red-500 text-white p-2 rounded"><i class="fa-solid fa-xmark"></i></button>
+                    </td>
+                </tr>`).join('');
+        }
+
+        async function approve(s, r, c, st) {
+            const res = await req({ action: "updateApproval", sheetName: s, row: r, col: c, status: st });
+            Swal.fire('สำเร็จ', res.message, 'success'); loadPendingApprovals();
+        }
+
+        async function loadNews() {
+            const res = await req({ action: "getNewsAndHolidays" }); Swal.close();
+            document.getElementById('divNews').innerHTML = res.news.map(n => `<div class="bg-white p-6 rounded-2xl shadow border-l-4 border-indigo-500">
+                <div class="flex justify-between mb-2"><h3 class="font-bold text-lg">${n.title}</h3><span class="text-xs text-indigo-500">${n.date}</span></div>
+                <p class="text-gray-600 mb-2">${n.content}</p><p class="text-xs text-gray-400">โดย: ${n.author}</p></div>`).join('') || '<p>ไม่มีข่าวสาร</p>';
+            
+            document.getElementById('divHolidays').innerHTML = res.holidays.map(h => `<li class="flex items-center p-3 bg-red-50 rounded-xl">
+                <div class="bg-white text-red-500 font-bold w-12 h-12 flex flex-col items-center justify-center rounded-lg shadow-sm"><span>${h.day}</span><span class="text-[10px]">${h.month}</span></div>
+                <div class="ml-3 text-sm font-bold text-gray-700">${h.title}</div></li>`).join('') || '<li>ไม่มีวันหยุด</li>';
+        }
+
+        async function loadAdminUsers() {
+            const res = await req({ action: "getAllUsers" }); Swal.close();
+            document.getElementById('tbAdmin').innerHTML = res.users.map(u => `
+                <tr class="border-b">
+                    <td class="p-4">${u.empId}</td><td class="p-4">${u.name}</td><td class="p-4">${u.department}</td>
+                    <td class="p-4">${u.role}</td><td class="p-4">${u.vacation}/${u.personal}</td>
+                    <td class="p-4"><span class="${u.status==='Active'?'text-green-600':'text-yellow-600'} font-bold">${u.status}</span></td>
+                    <td class="p-4 text-center">
+                        ${u.status==='Pending'?`<button onclick="adminAct('${u.empId}','approve')" class="bg-green-500 text-white p-1 px-2 rounded text-xs mr-1">อนุมัติ</button>`:''}
+                        <button onclick="adminAct('${u.empId}','delete')" class="bg-red-500 text-white p-1 px-2 rounded text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`).join('');
+        }
+
+        async function adminAct(id, act) {
+            if(!confirm('ยืนยันดำเนินการ?')) return;
+            const res = await req({ action: "adminManageUser", targetEmpId: id, subAction: act });
+            Swal.fire('สำเร็จ', res.message, 'success'); loadAdminUsers();
+        }
+    </script>
+</body>
+</html>

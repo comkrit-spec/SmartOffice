@@ -1,0 +1,15 @@
+{
+  "name": "SmartHQ HRMS",
+  "short_name": "SmartHQ",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3214/3214011.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
