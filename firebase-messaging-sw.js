@@ -14,10 +14,8 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function(payload) {
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
+  self.registration.showNotification(payload.notification.title, {
     body: payload.notification.body,
     icon: 'https://cdn-icons-png.flaticon.com/512/3214/3214011.png'
-  };
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  });
 });
