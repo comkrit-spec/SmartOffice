@@ -25,6 +25,9 @@
         .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
         .fc { font-family: 'Prompt', sans-serif; font-size: 0.85rem; background: #fff; padding: 15px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); border: 1px solid #f1f5f9; }
         .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 600 !important; color: #4338ca; }
+        .report-table th { background-color: #f8fafc; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border-bottom: 2px solid #e2e8f0; }
+        .report-table td, .report-table th { padding: 0.75rem 1rem; border-right: 1px solid #f1f5f9; white-space: nowrap; }
+        .report-table tr:hover { background-color: #f8fafc; }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 h-screen flex overflow-hidden transition-colors duration-300">
@@ -54,37 +57,47 @@
         </div>
     </div>
 
-    <main class="flex-1 flex flex-col h-screen overflow-y-auto pb-24 md:pb-0 relative w-full">
-        <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-40 px-6 py-4 flex justify-between items-center border-b border-slate-200 shadow-sm">
-            <div class="flex items-center gap-6">
-                <div class="font-bold text-xl text-indigo-700 flex items-center gap-2 cursor-pointer" onclick="navigate('dashboard')"><i class="fa-solid fa-layer-group"></i> SmartHQ</div>
-                <nav class="hidden md:flex items-center gap-2">
-                    <button onclick="navigate('dashboard')" class="nav-btn-desk px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg transition-colors"><i class="fa-solid fa-table-columns mr-1.5"></i>ภาพรวม</button>
-                    <button onclick="navigate('calendar')" class="nav-btn-desk px-4 py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-colors"><i class="fa-regular fa-calendar-days mr-1.5"></i>ปฏิทิน</button>
-                    <button onclick="navigate('leave')" class="nav-btn-desk px-4 py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-colors"><i class="fa-solid fa-plus mr-1.5"></i>ขอลา</button>
-                    <button onclick="navigate('approval')" id="menu-approval-desk" class="hidden nav-btn-desk px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"><i class="fa-solid fa-clipboard-check mr-1.5"></i>อนุมัติ</button>
-                    <button onclick="navigate('executive')" id="menu-exec-desk" class="hidden nav-btn-desk px-4 py-2 text-sm font-medium text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"><i class="fa-solid fa-chart-line mr-1.5"></i>รายงาน</button>
-                </nav>
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto pb-24 md:pb-0 relative w-full bg-slate-50">
+        
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-40 px-4 py-3 flex justify-between items-center shadow-sm">
+            
+            <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-sm">
+                    <i class="fa-solid fa-layer-group text-sm"></i>
+                </div>
+                <span class="text-lg font-bold text-slate-800 tracking-tight hidden sm:block">SmartHQ <span class="font-medium text-slate-500 text-[13px] ml-1 hidden lg:inline">Employee Management System</span></span>
             </div>
-            <div class="flex items-center gap-5">
-                <button onclick="navigate('settings')" id="topSettingsBtn" class="hidden text-slate-400 hover:text-indigo-600 transition-colors tooltip" title="ตั้งค่าระบบ"><i class="fa-solid fa-gear text-xl"></i></button>
-                <div class="relative group cursor-pointer">
-                    <div class="flex items-center gap-3">
-                        <div class="text-right hidden sm:block"><p class="text-sm font-semibold text-slate-800" id="topName">-</p><p class="text-[10px] text-indigo-500 font-bold uppercase tracking-wider" id="topRole">-</p></div>
-                        <img id="topAvatar" src="" class="w-10 h-10 rounded-full border border-slate-200 shadow-sm object-cover">
-                    </div>
-                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <div class="p-2">
-                            <button onclick="navigate('profile')" class="flex items-center w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"><i class="fa-regular fa-id-badge w-5"></i> บัญชีของฉัน</button>
-                            <div class="h-px bg-slate-100 my-1"></div>
-                            <button onclick="logout()" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"><i class="fa-solid fa-arrow-right-from-bracket w-5"></i> ออกจากระบบ</button>
-                        </div>
-                    </div>
+
+            <div class="flex items-center">
+                <nav class="hidden md:flex items-center gap-1.5 mr-4">
+                    <button onclick="navigate('dashboard')" id="nav-btn-dashboard" class="nav-btn-desk flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all text-blue-600 bg-white border border-blue-200 shadow-sm"><i class="fa-solid fa-chart-pie"></i> ภาพรวม</button>
+                    <button onclick="navigate('calendar')" id="nav-btn-calendar" class="nav-btn-desk flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all text-slate-500 border border-transparent hover:bg-slate-50 hover:border-slate-200"><i class="fa-regular fa-calendar-days"></i> ปฏิทิน</button>
+                    <button onclick="navigate('leave')" id="nav-btn-leave" class="nav-btn-desk flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all text-slate-500 border border-transparent hover:bg-slate-50 hover:border-slate-200"><i class="fa-solid fa-plus"></i> ขอลา</button>
+                    <button onclick="navigate('approval')" id="menu-approval-desk" class="hidden nav-btn-desk flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all text-slate-500 border border-transparent hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200"><i class="fa-solid fa-clipboard-check"></i> อนุมัติ</button>
+                    <button onclick="navigate('executive')" id="menu-exec-desk" class="hidden nav-btn-desk flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all text-slate-500 border border-transparent hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
+                    <button onclick="navigate('settings')" id="topSettingsBtn" class="hidden nav-btn-desk flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all text-slate-500 border border-transparent hover:bg-slate-50 hover:border-slate-200"><i class="fa-solid fa-sliders"></i> ตั้งค่า</button>
+                </nav>
+
+                <div class="hidden md:block w-px h-6 bg-slate-300 mx-2"></div>
+
+                <div class="flex items-center gap-2 ml-2">
+                    <button onclick="refreshData()" class="w-9 h-9 flex items-center justify-center text-slate-500 bg-white border border-slate-200 rounded-lg hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors tooltip" title="รีเฟรชข้อมูล">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <button onclick="toggleDarkMode()" class="w-9 h-9 flex items-center justify-center text-slate-500 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-slate-800 transition-colors tooltip" title="โหมดกลางคืน">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button onclick="navigate('profile')" class="w-9 h-9 flex items-center justify-center bg-blue-50 border border-blue-200 rounded-lg overflow-hidden tooltip hover:opacity-80 transition-opacity" title="โปรไฟล์ของฉัน">
+                         <img id="topAvatar" src="" class="w-full h-full object-cover">
+                    </button>
+                    <button onclick="logout()" class="hidden sm:flex w-9 h-9 items-center justify-center text-slate-500 bg-white border border-slate-200 rounded-lg hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors tooltip" title="ออกจากระบบ">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
                 </div>
             </div>
         </header>
 
-        <div class="p-4 md:p-8 max-w-5xl mx-auto w-full">
+        <div class="p-4 md:p-8 max-w-6xl mx-auto w-full">
             
             <section id="page-dashboard" class="page-section">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -100,101 +113,136 @@
                 <div id="alertZone" class="mb-6 space-y-3"></div>
                 <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">สรุปข้อมูลของฉัน</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-3xl p-5 text-white shadow-md relative overflow-hidden"><i class="fa-solid fa-umbrella-beach absolute -right-4 -bottom-4 text-6xl opacity-10"></i><p class="text-indigo-100 text-xs font-semibold mb-1">พักร้อนคงเหลือ</p><h4 class="text-3xl font-extrabold"><span id="sumVacation">0</span> <span class="text-sm font-medium">วัน</span></h4></div>
-                    <div class="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-3xl p-5 text-white shadow-md relative overflow-hidden"><i class="fa-solid fa-briefcase-medical absolute -right-4 -bottom-4 text-6xl opacity-10"></i><p class="text-emerald-100 text-xs font-semibold mb-1">ลากิจคงเหลือ</p><h4 class="text-3xl font-extrabold"><span id="sumPersonal">0</span> <span class="text-sm font-medium">วัน</span></h4></div>
-                    <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm"><p class="text-slate-400 text-xs font-semibold mb-1">เข้าสายเดือนนี้</p><h4 class="text-3xl font-extrabold text-amber-500"><span id="sumLate">0</span> <span class="text-sm font-medium">ครั้ง</span></h4></div>
-                    <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm"><p class="text-slate-400 text-xs font-semibold mb-1">เวลาปัจจุบัน</p><h4 class="text-3xl font-extrabold text-slate-700" id="currentTime">00:00</h4></div>
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-5 text-white shadow-sm relative overflow-hidden"><i class="fa-solid fa-umbrella-beach absolute -right-4 -bottom-4 text-6xl opacity-10"></i><p class="text-blue-100 text-xs font-semibold mb-1">พักร้อนคงเหลือ</p><h4 class="text-3xl font-extrabold"><span id="sumVacation">0</span> <span class="text-sm font-medium">วัน</span></h4></div>
+                    <div class="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl p-5 text-white shadow-sm relative overflow-hidden"><i class="fa-solid fa-briefcase-medical absolute -right-4 -bottom-4 text-6xl opacity-10"></i><p class="text-emerald-100 text-xs font-semibold mb-1">ลากิจคงเหลือ</p><h4 class="text-3xl font-extrabold"><span id="sumPersonal">0</span> <span class="text-sm font-medium">วัน</span></h4></div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"><p class="text-slate-400 text-xs font-semibold mb-1">เข้าสายเดือนนี้</p><h4 class="text-3xl font-extrabold text-amber-500"><span id="sumLate">0</span> <span class="text-sm font-medium">ครั้ง</span></h4></div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"><p class="text-slate-400 text-xs font-semibold mb-1">เวลาปัจจุบัน</p><h4 class="text-3xl font-extrabold text-slate-700" id="currentTime">00:00</h4></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-800 mb-4 flex items-center"><i class="fa-regular fa-clock text-indigo-500 mr-2 text-lg"></i> บันทึกเวลาวันนี้</h3><ul id="listTodayLogs" class="space-y-3"></ul></div>
-                    <div class="space-y-6"><div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold mb-4 text-red-500 flex items-center"><i class="fa-regular fa-calendar-star mr-2"></i> วันหยุดบริษัท</h3><ul id="divHolidays" class="space-y-3"></ul></div><div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold mb-4 text-blue-500 flex items-center"><i class="fa-regular fa-bell mr-2"></i> ข่าวสาร</h3><ul id="divNews" class="space-y-3"></ul></div></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold text-slate-800 mb-4 flex items-center"><i class="fa-regular fa-clock text-blue-500 mr-2 text-lg"></i> บันทึกเวลาวันนี้</h3><ul id="listTodayLogs" class="space-y-3"></ul></div>
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold mb-4 text-red-500 flex items-center"><i class="fa-regular fa-calendar-star mr-2"></i> วันหยุดบริษัท</h3><ul id="divHolidays" class="space-y-3"></ul></div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold mb-4 text-blue-500 flex items-center"><i class="fa-regular fa-bell mr-2"></i> ข่าวสาร</h3><ul id="divNews" class="space-y-3"></ul></div>
+                    </div>
                 </div>
             </section>
 
-            <section id="page-calendar" class="page-section"><h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-regular fa-calendar text-indigo-600 mr-2"></i> ปฏิทินวันหยุดและวันลา</h2><div id="calendar" class="mb-6"></div></section>
+            <section id="page-calendar" class="page-section"><h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-regular fa-calendar text-blue-600 mr-2"></i> ปฏิทินวันหยุดและวันลา</h2><div id="calendar" class="mb-6"></div></section>
 
             <section id="page-leave" class="page-section">
-                <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-regular fa-paper-plane text-indigo-600 mr-2"></i> ส่งคำขอลาพัก</h2>
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-6 flex justify-around items-center"><div class="w-32 h-32"><canvas id="vacationChart"></canvas></div><div class="w-32 h-32"><canvas id="personalChart"></canvas></div></div>
-                <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 mb-6">
-                    <div class="mb-5"><label class="text-sm font-medium text-slate-600 mb-2 block">ประเภทการลา</label><select id="lvType" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"><option value="">-- เลือกประเภท --</option><option value="ลาพักร้อน">ลาพักร้อน</option><option value="ลากิจ">ลากิจ</option><option value="ลาป่วย">ลาป่วย</option><option value="ลาไม่รับค่าจ้าง">ลาไม่รับค่าจ้าง</option><option value="ลาอื่นๆ">ลาอื่นๆ</option></select></div>
+                <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-regular fa-paper-plane text-blue-600 mr-2"></i> ส่งคำขอลาพัก</h2>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-around items-center"><div class="w-32 h-32"><canvas id="vacationChart"></canvas></div><div class="w-32 h-32"><canvas id="personalChart"></canvas></div></div>
+                <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 mb-6">
+                    <div class="mb-5"><label class="text-sm font-medium text-slate-600 mb-2 block">ประเภทการลา</label><select id="lvType" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"><option value="">-- เลือกประเภท --</option><option value="ลาพักร้อน">ลาพักร้อน</option><option value="ลากิจ">ลากิจ</option><option value="ลาป่วย">ลาป่วย</option><option value="ลาไม่รับค่าจ้าง">ลาไม่รับค่าจ้าง</option><option value="ลาอื่นๆ">ลาอื่นๆ</option></select></div>
                     <div class="grid grid-cols-2 gap-4 mb-5"><div><label class="text-sm font-medium text-slate-600 mb-2 block">วันที่เริ่ม</label><input type="date" id="lvStart" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div><div><label class="text-sm font-medium text-slate-600 mb-2 block">ถึงวันที่</label><input type="date" id="lvEnd" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div></div>
                     <div class="mb-5"><label class="text-sm font-medium text-slate-600 mb-2 block">ช่วงเวลา</label><select id="lvDuration" onchange="calculateLeave()" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"><option value="full">เต็มวัน (Full Day)</option><option value="morning">ครึ่งวันเช้า</option><option value="afternoon">ครึ่งวันบ่าย</option></select></div>
                     <div class="mb-6 bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex justify-between items-center"><span class="text-sm font-medium text-emerald-700">สรุปจำนวนวันลา</span><span class="text-2xl font-bold text-emerald-600"><span id="calcDays">0</span> วัน</span></div>
-                    <textarea id="lvReason" required placeholder="เหตุผลการลา..." rows="2" class="w-full mb-6 p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                    <textarea id="lvReason" required placeholder="เหตุผลการลา..." rows="2" class="w-full mb-6 p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     <div class="mb-8 relative overflow-hidden bg-slate-50 border-2 border-dashed border-slate-300 p-6 rounded-xl text-center hover:bg-slate-100 transition-colors"><input type="file" id="lvFile" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleFileSelect(this)"><i class="fa-regular fa-image text-3xl text-slate-400 mb-2"></i><p id="fileNameTxt" class="text-sm font-medium text-slate-600">แนบเอกสาร (รูปภาพ)</p></div>
-                    <button type="submit" id="btnSubmitLeave" class="w-full bg-indigo-600 text-white font-semibold py-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-md">ส่งคำขอลา</button>
+                    <button type="submit" id="btnSubmitLeave" class="w-full bg-blue-600 text-white font-semibold py-4 rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all shadow-md">ส่งคำขอลา</button>
                 </form>
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden"><div class="p-5 bg-slate-50 border-b border-slate-100"><h3 class="font-semibold text-slate-800">ประวัติของฉัน (ยกเลิกได้ถ้ารอตรวจ)</h3></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-100"><tr><th class="p-4 font-medium text-slate-500">ประเภท</th><th class="p-4 font-medium text-slate-500">วันที่</th><th class="p-4 font-medium text-slate-500 text-center">สถานะ</th></tr></thead><tbody id="tbMyLeaves"></tbody></table></div></div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"><div class="p-5 bg-slate-50 border-b border-slate-200"><h3 class="font-semibold text-slate-800">ประวัติของฉัน (ยกเลิกได้ถ้ารอตรวจ)</h3></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">ประเภท</th><th class="p-4 font-medium text-slate-500">วันที่</th><th class="p-4 font-medium text-slate-500 text-center">สถานะ</th></tr></thead><tbody id="tbMyLeaves"></tbody></table></div></div>
             </section>
             
             <section id="page-late" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-clock text-amber-500 mr-2"></i> ขอเข้าสาย</h2>
-                <form onsubmit="handleLateSubmit(event)" class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-6"><input type="date" id="ltDate" required class="w-full mb-4 p-4 bg-slate-50 border rounded-xl"><textarea id="ltReason" required placeholder="เหตุผลที่เข้าสาย" rows="2" class="w-full mb-4 p-4 bg-slate-50 border rounded-xl"></textarea><button type="submit" class="w-full bg-amber-500 text-white font-bold py-4 rounded-xl hover:bg-amber-600">ยื่นคำขอเข้าสาย</button></form>
-                <div class="bg-white rounded-3xl shadow-sm border overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-50"><tr><th class="p-4">วันที่</th><th class="p-4">เหตุผล</th><th class="p-4 text-center">สถานะ</th></tr></thead><tbody id="tbMyLates"></tbody></table></div>
+                <form onsubmit="handleLateSubmit(event)" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6"><input type="date" id="ltDate" required class="w-full mb-4 p-4 bg-slate-50 border border-slate-200 rounded-xl"><textarea id="ltReason" required placeholder="เหตุผลที่เข้าสาย" rows="2" class="w-full mb-4 p-4 bg-slate-50 border border-slate-200 rounded-xl"></textarea><button type="submit" class="w-full bg-amber-500 text-white font-bold py-4 rounded-xl hover:bg-amber-600">ยื่นคำขอเข้าสาย</button></form>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-50"><tr><th class="p-4">วันที่</th><th class="p-4">เหตุผล</th><th class="p-4 text-center">สถานะ</th></tr></thead><tbody id="tbMyLates"></tbody></table></div>
             </section>
 
             <section id="page-approval" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-clipboard-check text-emerald-600 mr-2"></i> อนุมัติคำขอ</h2>
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-slate-50 border-b border-slate-100"><tr><th class="p-4 font-medium text-slate-500">พนักงาน</th><th class="p-4 font-medium text-slate-500">รายการ</th><th class="p-4 font-medium text-slate-500 text-center">เอกสาร</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbApproval"></tbody></table></div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">พนักงาน</th><th class="p-4 font-medium text-slate-500">รายการ</th><th class="p-4 font-medium text-slate-500 text-center">เอกสาร</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbApproval"></tbody></table></div>
             </section>
 
             <section id="page-executive" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-chart-pie text-purple-600 mr-2"></i> รายงานสถิติผู้บริหาร</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-700 mb-4 text-center">วันลาสะสม (รายแผนก)</h3><canvas id="chartDeptLeaves"></canvas></div><div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-700 mb-4 text-center">เข้าสายสะสม (รายแผนก)</h3><canvas id="chartDeptLates"></canvas></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold text-slate-700 mb-4 text-center">วันลาสะสม (รายแผนก)</h3><canvas id="chartDeptLeaves"></canvas></div><div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold text-slate-700 mb-4 text-center">เข้าสายสะสม (รายแผนก)</h3><canvas id="chartDeptLates"></canvas></div></div>
                 
-                <div class="bg-purple-50 p-8 rounded-3xl border border-purple-100 shadow-sm">
-                    <h3 class="font-bold text-purple-800 mb-4 text-lg"><i class="fa-solid fa-file-export mr-2"></i> ระบบคัดกรองข้อมูลขั้นสูง (Export CSV)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <label class="text-sm font-medium text-purple-700 mb-2 block">ประเภทข้อมูล</label>
-                            <select id="repType" class="w-full p-4 bg-white border border-purple-200 rounded-xl outline-none text-slate-700 font-medium">
+                <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-4 text-lg"><i class="fa-solid fa-table border mr-2 text-blue-500 p-1 rounded"></i> ดึงข้อมูลและดูตัวอย่าง (Report Generator)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="md:col-span-2">
+                            <label class="text-xs font-bold text-slate-500 mb-2 block">ประเภทข้อมูล</label>
+                            <select id="repType" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm text-slate-700 font-medium">
                                 <option value="payroll">สรุปเพื่อทำเงินเดือน (Payroll Summary)</option>
                                 <option value="timelog">ประวัติการลงเวลาเข้า-ออก (Time Logs)</option>
                                 <option value="leave">ประวัติการลา (Leave Records)</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="text-sm font-medium text-purple-700 mb-2 block">แผนก (Department)</label>
-                            <select id="repDept" class="w-full p-4 bg-white border border-purple-200 rounded-xl outline-none text-slate-700 font-medium">
+                        <div class="md:col-span-2">
+                            <label class="text-xs font-bold text-slate-500 mb-2 block">แผนก (Department)</label>
+                            <select id="repDept" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm text-slate-700 font-medium">
                                 <option value="ALL">ดึงข้อมูลทุกแผนก</option>
-                                </select>
+                            </select>
                         </div>
-                        <div><label class="text-sm font-medium text-purple-700 mb-2 block">ตั้งแต่วันที่</label><input type="date" id="repStart" class="w-full p-4 bg-white border border-purple-200 rounded-xl text-slate-700"></div>
-                        <div><label class="text-sm font-medium text-purple-700 mb-2 block">ถึงวันที่</label><input type="date" id="repEnd" class="w-full p-4 bg-white border border-purple-200 rounded-xl text-slate-700"></div>
+                        <div class="md:col-span-2"><label class="text-xs font-bold text-slate-500 mb-2 block">ตั้งแต่วันที่</label><input type="date" id="repStart" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700"></div>
+                        <div class="md:col-span-2"><label class="text-xs font-bold text-slate-500 mb-2 block">ถึงวันที่</label><input type="date" id="repEnd" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700"></div>
                     </div>
-                    <button onclick="exportAdvancedReport()" class="w-full bg-purple-600 text-white font-bold py-4 rounded-xl hover:bg-purple-700 active:scale-[0.98] transition-all shadow-md"><i class="fa-solid fa-download mr-2"></i> ดาวน์โหลดข้อมูล (Excel / CSV)</button>
+                    <button onclick="generateReportPreview()" class="w-full bg-blue-50 text-blue-700 border border-blue-200 font-bold py-3 rounded-xl hover:bg-blue-100 active:scale-[0.98] transition-all shadow-sm"><i class="fa-solid fa-magnifying-glass mr-2"></i> ดึงข้อมูลตาราง</button>
+                </div>
+
+                <div id="reportTableContainer" class="hidden bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm mt-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                        <div class="flex items-center gap-2 w-full md:w-auto">
+                            <label class="text-sm font-medium text-slate-500">แสดง</label>
+                            <select id="rowsPerPage" onchange="changeRows(this.value)" class="p-2 border border-slate-200 bg-slate-50 rounded-lg text-sm outline-none font-bold text-blue-600">
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="300">300</option>
+                                <option value="all">ทั้งหมด</option>
+                            </select>
+                            <label class="text-sm font-medium text-slate-500">รายการ</label>
+                        </div>
+                        <button onclick="exportCurrentReport()" class="w-full md:w-auto bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-emerald-600 transition-all active:scale-95"><i class="fa-solid fa-file-excel mr-2"></i>Export Excel / CSV</button>
+                    </div>
+                    
+                    <div class="overflow-x-auto max-h-[500px] border border-slate-200 rounded-xl relative shadow-inner">
+                        <table class="w-full text-sm text-left report-table">
+                            <thead id="repThead" class="text-slate-600 font-semibold tracking-wide uppercase text-xs"></thead>
+                            <tbody id="repTbody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-4 text-sm text-slate-500 font-medium">
+                        <div id="repInfo">แสดง 0 ถึง 0 จาก 0 รายการ</div>
+                        <div class="flex gap-2">
+                            <button onclick="changePage(-1)" class="px-4 py-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-lg transition-colors"><i class="fa-solid fa-chevron-left"></i></button>
+                            <button onclick="changePage(1)" class="px-4 py-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-lg transition-colors"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <section id="page-profile" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800">บัญชีของฉัน</h2>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row items-center gap-8 mb-6"><img id="qrCodeImg" src="" class="w-32 h-32 rounded-xl border border-slate-200 p-2 shadow-sm"><div class="text-center md:text-left"><p class="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Digital ID</p><h3 class="text-2xl font-bold text-slate-800 mb-1" id="cardName">-</h3><p class="text-slate-500" id="cardEmpId">-</p><span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-medium inline-block mt-3" id="cardDept">-</span></div></div>
-                <form onsubmit="handleProfileUpdate(event)" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row items-center gap-8 mb-6"><img id="qrCodeImg" src="" class="w-32 h-32 rounded-xl border border-slate-200 p-2 shadow-sm"><div class="text-center md:text-left"><p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">Digital ID</p><h3 class="text-2xl font-bold text-slate-800 mb-1" id="cardName">-</h3><p class="text-slate-500" id="cardEmpId">-</p><span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-medium inline-block mt-3" id="cardDept">-</span></div></div>
+                <form onsubmit="handleProfileUpdate(event)" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5"><div><label class="text-xs font-medium text-slate-500 mb-2 block">รหัสพนักงาน</label><input type="text" id="pfEmpId" readonly class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"></div><div><label class="text-xs font-medium text-slate-500 mb-2 block">ชื่อ-นามสกุล</label><input type="text" id="pfName" required class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6"><div><label class="text-xs font-medium text-slate-500 mb-2 block">แผนก</label><input type="text" id="pfDept" readonly class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"></div><div><label class="text-xs font-medium text-slate-500 mb-2 block">เปลี่ยนรหัสผ่าน</label><input type="password" id="pfPassword" placeholder="(ปล่อยว่างถ้าไม่เปลี่ยน)" class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div></div>
-                    <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all">บันทึกข้อมูล</button>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-4 rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all">บันทึกข้อมูล</button>
                 </form>
             </section>
             
             <section id="page-settings" class="page-section">
-                <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-gear text-indigo-600 mr-2"></i> ตั้งค่าระบบและแอดมิน</h2>
-                <div class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100 mb-6"><h3 class="font-bold text-indigo-800 mb-4"><i class="fa-solid fa-map-location-dot mr-2"></i> พิกัดสาขา</h3><div class="bg-white rounded-xl overflow-hidden border mb-4"><table class="w-full text-sm text-left"><thead class="bg-slate-50"><tr><th class="p-3">Lat, Lng</th><th class="p-3">รัศมี (ม.)</th><th class="p-3 text-center">ลบ</th></tr></thead><tbody id="tbGeofence"></tbody></table></div><form onsubmit="handleAddGeofence(event)" class="flex gap-2"><input type="text" id="gLat" placeholder="Lat" required class="flex-1 p-3 rounded-lg border text-sm"><input type="text" id="gLng" placeholder="Lng" required class="flex-1 p-3 rounded-lg border text-sm"><input type="number" id="gRad" placeholder="รัศมี" required class="w-20 p-3 rounded-lg border text-sm"><button type="submit" class="bg-indigo-600 text-white px-4 rounded-lg font-bold">+</button></form></div>
+                <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-gear text-blue-600 mr-2"></i> ตั้งค่าระบบและแอดมิน</h2>
+                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 mb-6"><h3 class="font-bold text-blue-800 mb-4"><i class="fa-solid fa-map-location-dot mr-2"></i> พิกัดสาขา</h3><div class="bg-white rounded-xl overflow-hidden border mb-4"><table class="w-full text-sm text-left"><thead class="bg-slate-50"><tr><th class="p-3">Lat, Lng</th><th class="p-3">รัศมี (ม.)</th><th class="p-3 text-center">ลบ</th></tr></thead><tbody id="tbGeofence"></tbody></table></div><form onsubmit="handleAddGeofence(event)" class="flex gap-2"><input type="text" id="gLat" placeholder="Lat" required class="flex-1 p-3 rounded-lg border border-slate-200 text-sm"><input type="text" id="gLng" placeholder="Lng" required class="flex-1 p-3 rounded-lg border border-slate-200 text-sm"><input type="number" id="gRad" placeholder="รัศมี" required class="w-20 p-3 rounded-lg border border-slate-200 text-sm"><button type="submit" class="bg-blue-600 text-white px-4 rounded-lg font-bold">+</button></form></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><h3 class="font-bold text-slate-800 mb-4 text-red-500">ตั้งค่าวันหยุดบริษัท</h3><form onsubmit="req({action:'addHoliday', date:document.getElementById('hDate').value, title:document.getElementById('hTitle').value}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})" class="flex gap-2 mb-4"><input type="date" id="hDate" required class="w-full p-2 border rounded-lg text-sm"><input type="text" id="hTitle" placeholder="ชื่อวันหยุด" required class="w-full p-2 border rounded-lg text-sm"><button type="submit" class="bg-red-500 text-white px-3 rounded-lg">+</button></form><ul id="listSettingHolidays" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul></div>
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><h3 class="font-bold text-slate-800 mb-4 text-blue-500">จัดการข่าวสาร</h3><form onsubmit="req({action:'addNews', date:document.getElementById('nDate').value, title:document.getElementById('nTitle').value, content:document.getElementById('nContent').value, author:getDecryptedUser().name}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})"><input type="date" id="nDate" required class="w-full mb-2 p-2 border rounded-lg text-sm"><input type="text" id="nTitle" placeholder="หัวข้อ" required class="w-full mb-2 p-2 border rounded-lg text-sm"><textarea id="nContent" placeholder="รายละเอียด..." required class="w-full mb-2 p-2 border rounded-lg text-sm"></textarea><button type="submit" class="w-full bg-blue-500 text-white font-bold py-2 rounded-lg text-sm mb-4">เพิ่มประกาศ</button></form><ul id="listSettingNews" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul></div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><h3 class="font-bold text-slate-800 mb-4 text-red-500">ตั้งค่าวันหยุดบริษัท</h3><form onsubmit="req({action:'addHoliday', date:document.getElementById('hDate').value, title:document.getElementById('hTitle').value}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})" class="flex gap-2 mb-4"><input type="date" id="hDate" required class="w-full p-2 border rounded-lg text-sm"><input type="text" id="hTitle" placeholder="ชื่อวันหยุด" required class="w-full p-2 border rounded-lg text-sm"><button type="submit" class="bg-red-500 text-white px-3 rounded-lg">+</button></form><ul id="listSettingHolidays" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul></div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><h3 class="font-bold text-slate-800 mb-4 text-blue-500">จัดการข่าวสาร</h3><form onsubmit="req({action:'addNews', date:document.getElementById('nDate').value, title:document.getElementById('nTitle').value, content:document.getElementById('nContent').value, author:getDecryptedUser().name}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})"><input type="date" id="nDate" required class="w-full mb-2 p-2 border rounded-lg text-sm"><input type="text" id="nTitle" placeholder="หัวข้อ" required class="w-full mb-2 p-2 border rounded-lg text-sm"><textarea id="nContent" placeholder="รายละเอียด..." required class="w-full mb-2 p-2 border rounded-lg text-sm"></textarea><button type="submit" class="w-full bg-blue-500 text-white font-bold py-2 rounded-lg text-sm mb-4">เพิ่มประกาศ</button></form><ul id="listSettingNews" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul></div>
                 </div>
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mb-6"><div class="p-5 bg-slate-50 border-b border-slate-100 flex justify-between items-center"><h3 class="font-semibold text-slate-800">จัดการพนักงาน</h3></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-100"><tr><th class="p-4 font-medium text-slate-500">ID</th><th class="p-4 font-medium text-slate-500">ชื่อ/แผนก</th><th class="p-4 font-medium text-slate-500">สิทธิ์</th><th class="p-4 font-medium text-slate-500 text-center">โควต้า</th><th class="p-4 font-medium text-slate-500">สถานะ</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbAdmin"></tbody></table></div></div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6"><div class="p-5 bg-slate-50 border-b border-slate-200 flex justify-between items-center"><h3 class="font-semibold text-slate-800">จัดการพนักงาน</h3></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">ID</th><th class="p-4 font-medium text-slate-500">ชื่อ/แผนก</th><th class="p-4 font-medium text-slate-500">สิทธิ์</th><th class="p-4 font-medium text-slate-500">หัวหน้างาน</th><th class="p-4 font-medium text-slate-500 text-center">โควต้า</th><th class="p-4 font-medium text-slate-500">สถานะ</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbAdmin"></tbody></table></div></div>
             </section>
 
         </div>
     </main>
 
-    <nav class="md:hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-xl shadow-[0_-5px_20px_rgba(0,0,0,0.03)] z-50 flex justify-around items-center h-20 border-t border-slate-100 pb-safe px-2">
-        <button onclick="navigate('dashboard')" class="nav-btn text-indigo-600 flex flex-col items-center justify-center w-full h-full transition-colors"><i class="fa-solid fa-table-columns text-2xl mb-1"></i><span class="text-[9px] font-semibold">ภาพรวม</span></button>
+    <nav class="md:hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-xl shadow-[0_-5px_20px_rgba(0,0,0,0.03)] z-50 flex justify-around items-center h-20 border-t border-slate-200 pb-safe px-2">
+        <button onclick="navigate('dashboard')" class="nav-btn text-blue-600 flex flex-col items-center justify-center w-full h-full transition-colors"><i class="fa-solid fa-chart-pie text-2xl mb-1"></i><span class="text-[9px] font-semibold">ภาพรวม</span></button>
         <button onclick="navigate('calendar')" class="nav-btn text-slate-400 flex flex-col items-center justify-center w-full h-full transition-colors"><i class="fa-regular fa-calendar-days text-2xl mb-1"></i><span class="text-[9px] font-semibold">ปฏิทิน</span></button>
-        <div class="relative -top-5 px-2"><button onclick="navigate('leave')" class="bg-indigo-600 text-white w-14 h-14 rounded-2xl shadow-lg shadow-indigo-200/50 flex flex-col items-center justify-center text-xl active:scale-95 transition-all"><i class="fa-solid fa-plus mb-0.5"></i><span class="text-[8px] font-medium">ขอลา</span></button></div>
+        <div class="relative -top-5 px-2"><button onclick="navigate('leave')" class="bg-blue-600 text-white w-14 h-14 rounded-2xl shadow-lg shadow-blue-200/50 flex flex-col items-center justify-center text-xl active:scale-95 transition-all"><i class="fa-solid fa-plus mb-0.5"></i><span class="text-[8px] font-medium">ขอลา</span></button></div>
         <button onclick="navigate('approval')" id="menu-approval-mob" class="hidden nav-btn flex-col items-center justify-center w-full h-full text-emerald-500 transition-colors"><i class="fa-solid fa-clipboard-check text-2xl mb-1"></i><span class="text-[9px] font-semibold">อนุมัติ</span></button>
         <button onclick="navigate('profile')" class="nav-btn text-slate-400 flex flex-col items-center justify-center w-full h-full transition-colors"><i class="fa-solid fa-bars text-2xl mb-1"></i><span class="text-[9px] font-semibold">เมนู</span></button>
     </nav>
@@ -230,53 +278,48 @@
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=12.78&longitude=101.18&current_weather=true");
                 const data = await res.json();
                 const wCode = data.current_weather.weathercode; const temp = Math.round(data.current_weather.temperature);
-                
                 let wIcon = "☀️"; let wMsg = "อากาศแจ่มใส ลุยงานให้เต็มที่เลยครับ"; 
                 if (wCode >= 1 && wCode <= 3) { wIcon = "⛅"; wMsg = "อากาศกำลังดี ขอให้เป็นวันที่ยอดเยี่ยมครับ"; }
                 else if (wCode >= 45 && wCode <= 48) { wIcon = "🌫️"; wMsg = "มีหมอกลง ขับขี่ด้วยความระมัดระวังนะครับ"; }
                 else if (wCode >= 51 && wCode <= 65 || wCode >= 80 && wCode <= 82) { wIcon = "🌧️"; wMsg = "ฝนตก อย่าลืมพกร่มและดูแลสุขภาพด้วยครับ"; }
                 else if (wCode >= 95 && wCode <= 99) { wIcon = "⛈️"; wMsg = "ฝนฟ้าคะนองรุนแรง ระมัดระวังการเดินทางเป็นพิเศษครับ"; }
-
                 document.getElementById('wIcon').innerText = wIcon; document.getElementById('wTemp').innerText = temp;
                 const hour = new Date().getHours(); let timeGreet = hour < 12 ? 'อรุณสวัสดิ์' : hour < 18 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น';
-                document.getElementById('greetText').innerHTML = `${timeGreet} ${wIcon} <span class="text-indigo-600">${userName}</span>`; document.getElementById('dashAlertText').innerHTML = `<span class="text-indigo-500 font-bold">${wMsg}</span>`;
+                document.getElementById('greetText').innerHTML = `${timeGreet} ${wIcon} <span class="text-blue-600">${userName}</span>`; document.getElementById('dashAlertText').innerHTML = `<span class="text-blue-500 font-bold">${wMsg}</span>`;
             } catch (e) { document.getElementById('dashAlertText').innerText = "ยินดีต้อนรับสู่ระบบ SmartHQ ครับ"; }
         }
 
         function toggleAuth() { document.getElementById('loginForm').classList.toggle('hidden'); document.getElementById('registerForm').classList.toggle('hidden'); }
         function toggleDarkMode() { document.documentElement.classList.toggle('dark'); localStorage.setItem('smartOfficeTheme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); }
 
-        // 🔐 จัดการสิทธิ์การแสดงเมนูตอนโหลดระบบ
+        // 💡 เรียกฟังก์ชันนี้เพื่อดึงข้อมูลใหม่โดยไม่ต้องเปลี่ยนหน้า
+        function refreshData() {
+            const activePage = document.querySelector('.page-active').id.replace('page-', '');
+            navigate(activePage); // โหลดหน้าปัจจุบันซ้ำ
+        }
+
+        // 🔐 จัดการสิทธิ์การแสดงเมนู
         function setupDashboard(user) {
             document.getElementById('login-section').classList.remove('page-active'); document.getElementById('login-section').style.display = 'none';
             document.querySelector('.splash-screen').style.display = 'none';
             fetchWeather(user.name.split(' ')[0]);
             
             document.getElementById('topName').innerText = user.name; document.getElementById('topRole').innerText = user.role;
-            document.getElementById('topAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff`;
+            document.getElementById('topAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=3b82f6&color=fff`;
             
-            // Logic กำหนดสิทธิ์การมองเห็นเมนู
             if(['Manager', 'HR', 'Admin'].includes(user.role)) { 
                 document.getElementById('menu-approval-mob').classList.remove('hidden'); document.getElementById('menu-approval-mob').classList.add('flex');
                 document.getElementById('menu-approval-desk').classList.remove('hidden'); 
             }
-            if(['HR', 'Admin'].includes(user.role)) {
-                document.getElementById('menu-exec-desk').classList.remove('hidden'); // ให้ HR และ Admin เห็น Report
-            }
-            if(user.role === 'Admin') {
-                document.getElementById('topSettingsBtn').classList.remove('hidden'); // ให้ Admin เห็นปุ่มเฟืองตั้งค่า
-            }
+            if(['HR', 'Admin'].includes(user.role)) document.getElementById('menu-exec-desk').classList.remove('hidden'); 
+            if(user.role === 'Admin') document.getElementById('topSettingsBtn').classList.remove('hidden'); 
             navigate('dashboard');
         }
 
-        // 🔐 จัดการ Route (การป้องกันการเข้าถึงหน้า)
+        // 🔐 Navigation (กรองสิทธิ์ก่อนเข้าหน้า) และเปลี่ยนสีเมนูแบบใหม่
         function navigate(page) {
             const userRole = getDecryptedUser()?.role;
-            
-            // ระบบสลับหน้าโปรไฟล์ vs ตั้งค่า (Mobile)
             if(page === 'profile' && userRole === 'Admin') page = 'settings'; 
-            
-            // 🛡️ ป้องกันพนักงานทั่วไปแอบพิมพ์ URL เข้าหน้า Admin/Report
             if (page === 'admin' && userRole !== 'Admin') return Swal.fire('ปฏิเสธการเข้าถึง', 'คุณไม่มีสิทธิ์เข้าใช้งานหน้านี้', 'error');
             if (page === 'settings' && userRole !== 'Admin') return Swal.fire('ปฏิเสธการเข้าถึง', 'คุณไม่มีสิทธิ์เข้าใช้งานหน้านี้', 'error');
             if (page === 'executive' && !['HR', 'Admin'].includes(userRole)) return Swal.fire('ปฏิเสธการเข้าถึง', 'สำหรับฝ่ายบุคคลเท่านั้น', 'error');
@@ -285,14 +328,35 @@
             document.querySelectorAll('.page-section').forEach(e => e.classList.remove('page-active'));
             document.getElementById(`page-${page}`).classList.add('page-active');
             
-            document.querySelectorAll('.nav-btn').forEach(btn => { if(!btn.id.includes('approval')) btn.classList.replace('text-indigo-600', 'text-slate-400') });
-            if(event && event.currentTarget.classList.contains('nav-btn') && !event.currentTarget.id.includes('approval')) event.currentTarget.classList.replace('text-slate-400', 'text-indigo-600');
+            // เมนูมือถือ
+            document.querySelectorAll('.nav-btn').forEach(btn => { if(!btn.id.includes('approval')) btn.classList.replace('text-blue-600', 'text-slate-400') });
+            if(event && event.currentTarget.classList.contains('nav-btn') && !event.currentTarget.id.includes('approval')) event.currentTarget.classList.replace('text-slate-400', 'text-blue-600');
             
-            document.querySelectorAll('.nav-btn-desk').forEach(btn => { if(!btn.id.includes('approval')) { btn.classList.remove('text-indigo-600', 'bg-indigo-50', 'text-purple-600', 'bg-purple-50'); btn.classList.add('text-slate-500'); } });
-            if(event && event.currentTarget.classList.contains('nav-btn-desk') && !event.currentTarget.id.includes('approval')) {
-                event.currentTarget.classList.remove('text-slate-500'); 
-                if(page === 'executive') event.currentTarget.classList.add('text-purple-600', 'bg-purple-50');
-                else event.currentTarget.classList.add('text-indigo-600', 'bg-indigo-50');
+            // 💡 เมนูคอมพิวเตอร์แบบใหม่ (กรอบ + แบ็กกราวด์)
+            const activeClass = ['text-blue-600', 'bg-white', 'border-blue-200', 'shadow-sm'];
+            const inactiveClass = ['text-slate-500', 'border-transparent', 'hover:bg-slate-50', 'hover:border-slate-200'];
+            
+            document.querySelectorAll('.nav-btn-desk').forEach(btn => { 
+                if(!btn.id.includes('approval')) { 
+                    btn.classList.remove(...activeClass, 'text-purple-600', 'border-purple-200'); 
+                    btn.classList.add(...inactiveClass); 
+                } 
+            });
+            
+            // อัปเดตสีปุ่มเมื่อกดเมนู
+            let currentBtn = null;
+            if(event && event.currentTarget.classList.contains('nav-btn-desk')) currentBtn = event.currentTarget;
+            else if (page === 'dashboard') currentBtn = document.getElementById('nav-btn-dashboard');
+            else if (page === 'calendar') currentBtn = document.getElementById('nav-btn-calendar');
+            else if (page === 'leave') currentBtn = document.getElementById('nav-btn-leave');
+            else if (page === 'approval') currentBtn = document.getElementById('menu-approval-desk');
+            else if (page === 'executive') currentBtn = document.getElementById('menu-exec-desk');
+            else if (page === 'settings') currentBtn = document.getElementById('topSettingsBtn');
+
+            if(currentBtn && !currentBtn.id.includes('approval') && !currentBtn.id.includes('Settings')) {
+                currentBtn.classList.remove(...inactiveClass); 
+                if(page === 'executive') currentBtn.classList.add('text-purple-600', 'bg-white', 'border-purple-200', 'shadow-sm');
+                else currentBtn.classList.add(...activeClass);
             }
             
             if(['dashboard', 'calendar', 'leave'].includes(page)) loadSummaryBoard();
@@ -340,7 +404,7 @@
                 
                 if(document.getElementById('page-leave').classList.contains('page-active')) {
                     const drawChart = (ctx, label, total, used, color) => { const remain = total - used; if(window[ctx]) window[ctx].destroy(); window[ctx] = new Chart(document.getElementById(ctx), { type: 'doughnut', data: { labels: ['ใช้ไปแล้ว', 'คงเหลือ'], datasets: [{ data: [used, remain < 0 ? 0 : remain], backgroundColor: ['#f1f5f9', color], borderWidth: 0 }] }, options: { responsive: true, cutout: '78%', plugins: { legend: { display: false }, title: { display: true, text: `${label} (${remain}/${total})`, font: { family: 'Prompt', size: 11 }, color: '#64748b', padding: {bottom: -5} } } } }); };
-                    drawChart('vacationChart', 'พักร้อน', user.leaveVacation, d.stats.vacationUsed, '#6366f1'); drawChart('personalChart', 'ลากิจ', user.leavePersonal, d.stats.personalUsed, '#10b981');
+                    drawChart('vacationChart', 'พักร้อน', user.leaveVacation, d.stats.vacationUsed, '#3b82f6'); drawChart('personalChart', 'ลากิจ', user.leavePersonal, d.stats.personalUsed, '#10b981');
                     
                     document.getElementById('tbMyLeaves').innerHTML = d.leaves.map(l => `<tr class="border-b border-slate-50"><td class="p-3 font-medium text-slate-600">${l.type}</td><td class="p-3 text-slate-500 text-xs">${l.date}</td><td class="p-3 text-center">${getBadge(l.status)} ${l.status==='Pending'?`<button onclick="cancelLeave(${l.row}, 'Leaves')" class="ml-2 text-xs text-red-500 hover:text-red-700 font-bold underline">ยกเลิก</button>`:''}</td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-400">ไม่มีประวัติ</td></tr>';
                     calculateLeave();
@@ -348,7 +412,7 @@
             });
         }
 
-        async function cancelLeave(r, sheet) { if(!confirm('ยืนยันยกเลิกคำขอลา? โควต้าจะถูกคืนกลับให้คุณทันที')) return; const res = await req({ action: "cancelLeave", row: r, sheetName: sheet }); Toast.fire({ icon: 'success', title: res.message }); loadSummaryBoard(); }
+        async function cancelLeave(r, sheet) { if(!confirm('ยืนยันยกเลิกคำขอลา?')) return; const res = await req({ action: "cancelLeave", row: r, sheetName: sheet }); Toast.fire({ icon: 'success', title: res.message }); loadSummaryBoard(); }
 
         function calculateLeave() { const startStr = document.getElementById('lvStart').value; const endStr = document.getElementById('lvEnd').value; const duration = document.getElementById('lvDuration').value; const btn = document.getElementById('btnSubmitLeave'); const resultTxt = document.getElementById('calcDays'); if(!startStr || !endStr || new Date(startStr) > new Date(endStr)) { resultTxt.innerText = "0"; btn.disabled = true; return; } if(startStr !== endStr && duration !== 'full') { Swal.fire('เตือน','ลาข้ามวันต้องเลือก "เต็มวัน" เท่านั้นครับ','info'); document.getElementById('lvDuration').value = 'full'; return calculateLeave(); } const restDaysArr = (getDecryptedUser().restDays || "0,6").split(',').map(Number); let totalDays = 0; let current = new Date(startStr); const end = new Date(endStr); while (current <= end) { if (!restDaysArr.includes(current.getDay())) totalDays += 1; current.setDate(current.getDate() + 1); } if (totalDays > 0 && duration !== 'full') totalDays = 0.5; resultTxt.innerText = totalDays; btn.disabled = totalDays <= 0; if(totalDays <= 0) btn.classList.add('opacity-50', 'cursor-not-allowed'); else btn.classList.remove('opacity-50', 'cursor-not-allowed'); }
         function handleFileSelect(input) { const file = input.files[0]; if(!file) return document.getElementById('fileNameTxt').innerText = 'แนบเอกสาร (รูปภาพ)'; document.getElementById('fileNameTxt').innerText = "กำลังบีบอัดรูปภาพ..."; const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = event => { const img = new Image(); img.src = event.target.result; img.onload = () => { const canvas = document.createElement('canvas'); let width = img.width; let height = img.height; const MAX = 800; if (width > height) { if (width > MAX) { height *= MAX / width; width = MAX; } } else { if (height > MAX) { width *= MAX / height; height = MAX; } } canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); compressedBase64 = canvas.toDataURL('image/jpeg', 0.6); document.getElementById('fileNameTxt').innerText = "✅ " + file.name; } } }
@@ -372,16 +436,14 @@
         }
         async function approve(s, r, role, cM, cH, st) { const res = await req({ action: "updateApproval", sheetName: s, row: r, role: role, colManager: cM, colHR: cH, status: st }); Toast.fire({ icon: 'success', title: res.message }); loadPendingApprovals(); loadSummaryBoard(); }
 
-        // 💡 อัปเดตโหลดแผนกมาใส่ใน Dropdown ให้หน้ารายงาน
-        let usersDataGlobal = [];
+        // === 📊 REPORT GENERATOR (ระบบตารางพรีวิวและดาวน์โหลด) ===
+        let globalReportData = []; let repCurrentPage = 1; let repRowsPerPage = 50;
+
         async function loadExecutiveStats() { 
             const res = await req({ action: "getExecutiveStats" }); Swal.close(); 
-            const depts = Object.keys(res.stats); 
-            const leavesData = depts.map(d => res.stats[d].leaves); 
-            const latesData = depts.map(d => res.stats[d].lates); 
+            const depts = Object.keys(res.stats); const leavesData = depts.map(d => res.stats[d].leaves); const latesData = depts.map(d => res.stats[d].lates); 
             
-            // นำแผนกมาใส่ในตัวกรอง (Filter)
-            let deptOptions = `<option value="ALL">รวมทุกแผนก</option>`;
+            let deptOptions = `<option value="ALL">ดึงข้อมูลทุกแผนก</option>`;
             depts.forEach(d => deptOptions += `<option value="${d}">${d}</option>`);
             document.getElementById('repDept').innerHTML = deptOptions;
 
@@ -389,96 +451,92 @@
             drawBarChart('cDeptLeaves', 'chartDeptLeaves', depts, leavesData, '#818cf8', 'วันลา (วัน)'); drawBarChart('cDeptLates', 'chartDeptLates', depts, latesData, '#fb923c', 'เข้าสาย (ครั้ง)'); 
         }
 
-        // 📊 คัดกรองและส่งออกรายงานขั้นสูง (Advanced Export)
-        async function exportAdvancedReport() { 
-            const repType = document.getElementById('repType').value;
-            const repDept = document.getElementById('repDept').value;
-            const startD = new Date(document.getElementById('repStart').value); 
-            const endD = new Date(document.getElementById('repEnd').value); 
-            
+        async function generateReportPreview() {
+            const repType = document.getElementById('repType').value; const repDept = document.getElementById('repDept').value;
+            const startD = new Date(document.getElementById('repStart').value); const endD = new Date(document.getElementById('repEnd').value); 
             if(startD > endD) return Swal.fire('Error', 'วันที่เริ่มต้นต้องน้อยกว่าสิ้นสุด', 'error'); 
             
-            Swal.fire({ title: 'กำลังคัดกรองข้อมูล...', allowOutsideClick: false, didOpen: () => Swal.showLoading() }); 
+            Swal.fire({ title: 'กำลังดึงข้อมูล...', allowOutsideClick: false, didOpen: () => Swal.showLoading() }); 
             const res = await req({ action: "getReportData" }); Swal.close(); 
+            globalReportData = []; 
             
-            let csvData = [];
-            let fileName = "";
-
             if (repType === 'payroll') {
-                fileName = "Payroll_Summary";
-                csvData.push(["รหัส", "ชื่อ", "แผนก", "มาทำงาน (ครั้ง)", "ลาอนุมัติ (วัน)", "เข้าสายอนุมัติ (ครั้ง)"]); 
+                globalReportData.push(["รหัส", "ชื่อ", "แผนก", "มาทำงาน (ครั้ง)", "ลาอนุมัติ (วัน)", "เข้าสายอนุมัติ (ครั้ง)"]); 
                 for(let i=1; i<res.users.length; i++) { 
                     const empId = res.users[i][0]; const name = res.users[i][2]; const dept = res.users[i][4]; 
-                    if(repDept !== "ALL" && dept !== repDept) continue; // คัดกรองแผนก
-
+                    if(repDept !== "ALL" && dept !== repDept) continue; 
                     let presentCount = 0; let leaveDays = 0; let lateCount = 0; 
                     for(let j=1; j<res.timeLogs.length; j++) { if(res.timeLogs[j][1] === empId && res.timeLogs[j][2] === "Check-In") { let logDate = new Date(res.timeLogs[j][0]); if(logDate >= startD && logDate <= endD) presentCount++; } } 
                     for(let j=1; j<res.leaves.length; j++) { if(res.leaves[j][1] === empId && (res.leaves[j][7] === "Approved" || res.leaves[j][8] === "Approved")) { let leaveD = new Date(res.leaves[j][3]); if(leaveD >= startD && leaveD <= endD) leaveDays += Number(res.leaves[j][5]); } } 
                     for(let j=1; j<res.lates.length; j++) { if(res.lates[j][1] === empId && res.lates[j][4] === "Approved") { let lateD = new Date(res.lates[j][2]); if(lateD >= startD && lateD <= endD) lateCount++; } } 
-                    if(empId) csvData.push([`"${empId}"`, `"${name}"`, `"${dept}"`, presentCount, leaveDays, lateCount]); 
+                    if(empId) globalReportData.push([empId, name, dept, presentCount, leaveDays, lateCount]); 
                 }
             } 
             else if (repType === 'timelog') {
-                fileName = "Time_Attendance_Log";
-                csvData.push(["วันที่", "เวลา", "รหัสพนักงาน", "ประเภท", "สถานะ"]); 
+                globalReportData.push(["วันที่", "เวลา", "รหัสพนักงาน", "ชื่อ", "ประเภท", "สถานะ"]); 
                 for(let j=1; j<res.timeLogs.length; j++) {
                     let logDate = new Date(res.timeLogs[j][0]);
                     if(logDate >= startD && logDate <= endD) {
-                        const empId = res.timeLogs[j][1];
-                        
-                        // หาแผนกของคนนี้ เพื่อคัดกรอง
-                        let empDept = "";
-                        let empName = "";
+                        const empId = res.timeLogs[j][1]; let empDept = ""; let empName = "";
                         for(let k=1; k<res.users.length; k++) { if(res.users[k][0] === empId) { empDept = res.users[k][4]; empName = res.users[k][2]; break; } }
                         if(repDept !== "ALL" && empDept !== repDept) continue;
-
-                        csvData.push([`"${Utilities_formatDate(logDate, "dd/MM/yyyy")}"`, `"${Utilities_formatDate(logDate, "HH:mm:ss")}"`, `"${empId}"`, `"${res.timeLogs[j][2]}"`, `"${res.timeLogs[j][5]}"`]);
+                        globalReportData.push([Utilities_formatDate(logDate, "dd/MM/yyyy"), Utilities_formatDate(logDate, "HH:mm:ss"), empId, empName, res.timeLogs[j][2], res.timeLogs[j][5]]);
                     }
                 }
             }
             else if (repType === 'leave') {
-                fileName = "Leave_History_Log";
-                csvData.push(["วันที่ส่งคำขอ", "รหัสพนักงาน", "ชื่อ", "ประเภทลา", "วันที่เริ่ม", "ถึงวันที่", "จำนวนวัน", "เหตุผล", "สถานะหัวหน้า", "สถานะHR"]); 
+                globalReportData.push(["วันที่ส่งคำขอ", "รหัสพนักงาน", "ชื่อ", "ประเภทลา", "วันที่เริ่ม", "ถึงวันที่", "จำนวนวัน", "สถานะ"]); 
                 for(let j=1; j<res.leaves.length; j++) {
                     let reqDate = new Date(res.leaves[j][0]);
                     if(reqDate >= startD && reqDate <= endD) {
-                        const empId = res.leaves[j][1];
-                        
-                        // หาแผนกของคนนี้
-                        let empDept = "";
+                        const empId = res.leaves[j][1]; let empDept = "";
                         for(let k=1; k<res.users.length; k++) { if(res.users[k][0] === empId) { empDept = res.users[k][4]; break; } }
                         if(repDept !== "ALL" && empDept !== repDept) continue;
-
-                        csvData.push([`"${Utilities_formatDate(reqDate, "dd/MM/yyyy HH:mm")}"`, `"${empId}"`, `"${res.leaves[j][10]}"`, `"${res.leaves[j][2]}"`, `"${Utilities_formatDate(new Date(res.leaves[j][3]), "dd/MM/yyyy")}"`, `"${Utilities_formatDate(new Date(res.leaves[j][4]), "dd/MM/yyyy")}"`, res.leaves[j][5], `"${res.leaves[j][6]}"`, `"${res.leaves[j][7]}"`, `"${res.leaves[j][8]}"`]);
+                        let statusHR = res.leaves[j][8] !== "Pending" ? res.leaves[j][8] : res.leaves[j][7]; 
+                        globalReportData.push([Utilities_formatDate(reqDate, "dd/MM/yyyy"), empId, res.leaves[j][10], res.leaves[j][2], Utilities_formatDate(new Date(res.leaves[j][3]), "dd/MM/yyyy"), Utilities_formatDate(new Date(res.leaves[j][4]), "dd/MM/yyyy"), res.leaves[j][5], statusHR]);
                     }
                 }
             }
 
-            // ถ้าไม่มีข้อมูล
-            if(csvData.length === 1) return Swal.fire('ไม่พบข้อมูล', 'ไม่มีข้อมูลในช่วงเวลาและแผนกที่ระบุ', 'info');
+            if(globalReportData.length <= 1) { document.getElementById('reportTableContainer').classList.add('hidden'); return Swal.fire('ไม่พบข้อมูล', 'ไม่มีข้อมูลในช่วงเวลาและแผนกที่ระบุ', 'info'); }
+            document.getElementById('reportTableContainer').classList.remove('hidden');
+            repCurrentPage = 1; renderReportTable();
+        }
 
-            const csvContent = "\ufeff" + csvData.map(e => e.join(",")).join("\n"); 
+        function renderReportTable() {
+            if(globalReportData.length <= 1) return;
+            const headers = globalReportData[0]; const dataRows = globalReportData.slice(1); const totalRows = dataRows.length;
+            document.getElementById('repThead').innerHTML = `<tr>${headers.map(h => `<th class="p-3">${h}</th>`).join('')}</tr>`;
+            let startIdx = 0; let endIdx = totalRows;
+            if(repRowsPerPage !== 'all') { const limit = parseInt(repRowsPerPage); startIdx = (repCurrentPage - 1) * limit; endIdx = Math.min(startIdx + limit, totalRows); }
+            const rowsToShow = dataRows.slice(startIdx, endIdx);
+            document.getElementById('repTbody').innerHTML = rowsToShow.map(row => `<tr>${row.map(cell => `<td class="p-3">${cell}</td>`).join('')}</tr>`).join('');
+            document.getElementById('repInfo').innerText = `แสดง ${startIdx + 1} ถึง ${endIdx} จาก ${totalRows} รายการ`;
+        }
+
+        function changeRows(val) { repRowsPerPage = val; repCurrentPage = 1; renderReportTable(); }
+        function changePage(offset) {
+            if(repRowsPerPage === 'all') return;
+            const limit = parseInt(repRowsPerPage); const maxPage = Math.ceil((globalReportData.length - 1) / limit);
+            let newPage = repCurrentPage + offset;
+            if(newPage >= 1 && newPage <= maxPage) { repCurrentPage = newPage; renderReportTable(); }
+        }
+
+        function exportCurrentReport() {
+            if(globalReportData.length <= 1) return Swal.fire('Error', 'กรุณาดึงข้อมูลก่อน', 'error');
+            const repType = document.getElementById('repType').value;
+            let fileName = repType === 'payroll' ? "Payroll" : (repType === 'timelog' ? "TimeLogs" : "Leaves");
+            let csvSafeData = globalReportData.map(row => row.map(cell => `"${cell}"`));
+            const csvContent = "\ufeff" + csvSafeData.map(e => e.join(",")).join("\n"); 
             const link = document.createElement("a"); link.href = window.URL.createObjectURL(new Blob([csvContent], {type: "text/csv;charset=utf-8;"})); 
-            link.download = `${fileName}_${document.getElementById('repStart').value}_to_${document.getElementById('repEnd').value}.csv`; 
-            link.click(); 
+            link.download = `${fileName}_${document.getElementById('repStart').value}_to_${document.getElementById('repEnd').value}.csv`; link.click(); 
         }
 
-        // Helper for JS date format (to match GAS format)
-        function Utilities_formatDate(date, format) {
-            const d = date.getDate().toString().padStart(2, '0');
-            const m = (date.getMonth() + 1).toString().padStart(2, '0');
-            const y = date.getFullYear();
-            const hr = date.getHours().toString().padStart(2, '0');
-            const min = date.getMinutes().toString().padStart(2, '0');
-            const sec = date.getSeconds().toString().padStart(2, '0');
-            if(format === "dd/MM/yyyy") return `${d}/${m}/${y}`;
-            if(format === "HH:mm:ss") return `${hr}:${min}:${sec}`;
-            if(format === "dd/MM/yyyy HH:mm") return `${d}/${m}/${y} ${hr}:${min}`;
-            return date.toString();
-        }
+        function Utilities_formatDate(date, format) { const d = date.getDate().toString().padStart(2, '0'); const m = (date.getMonth() + 1).toString().padStart(2, '0'); const y = date.getFullYear(); const hr = date.getHours().toString().padStart(2, '0'); const min = date.getMinutes().toString().padStart(2, '0'); const sec = date.getSeconds().toString().padStart(2, '0'); if(format === "dd/MM/yyyy") return `${d}/${m}/${y}`; if(format === "HH:mm:ss") return `${hr}:${min}:${sec}`; if(format === "dd/MM/yyyy HH:mm") return `${d}/${m}/${y} ${hr}:${min}`; return date.toString(); }
 
         // --- ส่วนจัดการ Admin ---
         async function loadSettings() { req({ action: "getSummaryBoard", empId: 'admin', role: 'Admin' }, true).then(res => { document.getElementById('listSettingHolidays').innerHTML = res.data.holidays.map(h => `<li class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100"><span><span class="text-red-500 font-bold mr-2">${h.day} ${h.month}</span>${h.title}</span><button onclick="delData(${h.row}, 'deleteHoliday')" class="text-red-400 hover:text-red-600 px-2"><i class="fa-regular fa-trash-can"></i></button></li>`).join(''); document.getElementById('listSettingNews').innerHTML = res.data.news.map(n => `<li class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100"><div><span class="text-blue-500 font-bold mr-2 text-[10px]">${n.date}</span><span class="text-xs font-semibold">${n.title}</span></div><button onclick="delData(${n.row}, 'deleteNews')" class="text-red-400 hover:text-red-600 px-2"><i class="fa-regular fa-trash-can"></i></button></li>`).join(''); }); const res = await req({ action: "getSettingsData" }); Swal.close(); document.getElementById('tbGeofence').innerHTML = res.geofences.map(g => `<tr class="border-b"><td class="p-3 font-mono text-xs text-slate-600">${g.lat}, ${g.lng}</td><td class="p-3 text-indigo-600 font-bold">${g.radius} ม.</td><td class="p-3 text-center"><button onclick="delData(${g.row}, 'deleteGeofence')" class="text-red-400 hover:text-red-600"><i class="fa-regular fa-trash-can"></i></button></td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-400 text-xs">ยังไม่มีพิกัดสาขา</td></tr>'; }
+        
         async function handleAddGeofence(e) { e.preventDefault(); const res = await req({ action: "addGeofence", lat: document.getElementById('gLat').value, lng: document.getElementById('gLng').value, radius: document.getElementById('gRad').value }); Toast.fire({ icon: 'success', title: res.message }); document.getElementById('gLat').parentElement.reset(); loadSettings(); }
         async function delData(r, action) { if(!confirm('ยืนยันการลบ?')) return; const res = await req({ action: action, row: r }); Toast.fire({ icon: 'success', title: res.message }); loadSettings(); }
         async function handleResetLeaves() { if(confirm('⚠️ อันตราย! ยืนยันการรีเซ็ตโควต้าพนักงานทุกคน?')) { const res = await req({ action: "resetYearlyLeaves" }); Swal.fire('สำเร็จ', res.message, 'success'); } }
