@@ -14,25 +14,68 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Prompt', sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; color: #334155; }
+        body { 
+            font-family: 'Prompt', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+            overscroll-behavior-y: none; 
+            color: #334155; 
+        }
         ::-webkit-scrollbar { display: none; }
+        
         .page-section { display: none !important; animation: fadeIn 0.4s ease-out forwards; } 
         .page-active { display: block !important; }
         #login-section.page-active { display: flex !important; animation: none; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(5px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes fadeOut { 
+            to { opacity: 0; visibility: hidden; } 
+        }
+        
         .splash-screen { animation: fadeOut 0.5s ease-out 1s forwards; }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
-        .fc { font-family: 'Prompt', sans-serif; font-size: 0.85rem; background: #fff; padding: 15px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); border: 1px solid #e2e8f0; }
+        
+        .fc { 
+            font-family: 'Prompt', sans-serif; 
+            font-size: 0.85rem; background: #fff; 
+            padding: 15px; border-radius: 24px; 
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); 
+            border: 1px solid #e2e8f0; 
+        }
         .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 600 !important; color: #2563eb; }
         
-        .report-table th { background-color: #f8fafc; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border-bottom: 2px solid #e2e8f0; }
-        .report-table td, .report-table th { padding: 0.75rem 1rem; border-right: 1px solid #f1f5f9; white-space: nowrap; }
+        .report-table th { 
+            background-color: #f8fafc; 
+            position: sticky; 
+            top: 0; 
+            z-index: 10; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+            border-bottom: 2px solid #e2e8f0; 
+        }
+        .report-table td, .report-table th { 
+            padding: 0.75rem 1rem; 
+            border-right: 1px solid #f1f5f9; 
+            white-space: nowrap; 
+        }
         .report-table tr:hover { background-color: #f8fafc; }
 
-        /* 🔄 Micro-Interaction สำหรับปุ่มโหลด */
-        .btn-loading { position: relative; color: transparent !important; pointer-events: none; opacity: 0.8; }
-        .btn-loading::after { content: ""; position: absolute; left: 50%; top: 50%; width: 1.2rem; height: 1.2rem; border: 3px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; transform: translate(-50%, -50%); }
+        /* Micro-Interaction สำหรับปุ่มโหลด */
+        .btn-loading { 
+            position: relative; 
+            color: transparent !important; 
+            pointer-events: none; 
+            opacity: 0.8; 
+        }
+        .btn-loading::after { 
+            content: ""; position: absolute; left: 50%; top: 50%; 
+            width: 1.2rem; height: 1.2rem; 
+            border: 3px solid white; border-top-color: transparent; 
+            border-radius: 50%; 
+            animation: spin 0.8s linear infinite; 
+            transform: translate(-50%, -50%); 
+        }
         @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
     </style>
 </head>
@@ -52,15 +95,30 @@
                 <p class="text-blue-100 font-light leading-relaxed z-10 text-lg">ระบบบริหารจัดการทรัพยากรบุคคลแบบครบวงจร ยกระดับการทำงานให้สมาร์ทกว่าเดิม</p>
             </div>
             <div class="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-center">
-                <div class="text-center mb-8 md:text-left"><div class="md:hidden flex justify-center mb-4"><i class="fa-solid fa-layer-group text-5xl text-blue-600"></i></div><h2 class="text-3xl font-bold text-slate-800">เข้าสู่ระบบ</h2><p class="text-slate-500 mt-1 text-sm">กรอกรหัสพนักงานเพื่อใช้งาน</p></div>
+                <div class="text-center mb-8 md:text-left">
+                    <div class="md:hidden flex justify-center mb-4"><i class="fa-solid fa-layer-group text-5xl text-blue-600"></i></div>
+                    <h2 class="text-3xl font-bold text-slate-800">เข้าสู่ระบบ</h2>
+                    <p class="text-slate-500 mt-1 text-sm">กรอกรหัสพนักงานเพื่อใช้งาน</p>
+                </div>
                 <form id="loginForm" onsubmit="handleLogin(event)">
-                    <div class="mb-5"><label class="block text-sm font-medium text-slate-600 mb-2">รหัสพนักงาน</label><input type="text" id="empId" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium text-slate-700"></div>
-                    <div class="mb-8"><label class="block text-sm font-medium text-slate-600 mb-2">รหัสผ่าน</label><input type="password" id="password" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium text-slate-700"></div>
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-slate-600 mb-2">รหัสพนักงาน</label>
+                        <input type="text" id="empId" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium text-slate-700">
+                    </div>
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-slate-600 mb-2">รหัสผ่าน</label>
+                        <input type="password" id="password" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium text-slate-700">
+                    </div>
                     <button type="submit" id="btnLogin" class="w-full bg-blue-600 text-white font-semibold py-4 rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all shadow-md">เข้าสู่ระบบ</button>
                     <p class="text-center mt-6 text-sm text-slate-500">ไม่มีบัญชี? <button type="button" onclick="toggleAuth()" class="text-blue-600 font-semibold hover:underline">ส่งคำขอสมัครสมาชิก</button></p>
                 </form>
+                
                 <form id="registerForm" onsubmit="handleRegister(event)" class="hidden">
-                    <input type="text" id="regEmpId" required placeholder="รหัสพนักงาน" class="w-full mb-3 p-4 bg-slate-50 border border-slate-200 rounded-xl"><input type="text" id="regName" required placeholder="ชื่อ-นามสกุล" class="w-full mb-3 p-4 bg-slate-50 border border-slate-200 rounded-xl"><input type="text" id="regDept" required placeholder="แผนก" class="w-full mb-3 p-4 bg-slate-50 border border-slate-200 rounded-xl"><input type="password" id="regPassword" required placeholder="รหัสผ่าน" class="w-full mb-6 p-4 bg-slate-50 border border-slate-200 rounded-xl"><button type="submit" id="btnReg" class="w-full bg-sky-500 text-white font-semibold py-4 rounded-xl shadow-md hover:bg-sky-600">สมัครสมาชิก</button>
+                    <input type="text" id="regEmpId" required placeholder="รหัสพนักงาน" class="w-full mb-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                    <input type="text" id="regName" required placeholder="ชื่อ-นามสกุล" class="w-full mb-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                    <input type="text" id="regDept" required placeholder="แผนก" class="w-full mb-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                    <input type="password" id="regPassword" required placeholder="รหัสผ่าน" class="w-full mb-6 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                    <button type="submit" id="btnReg" class="w-full bg-sky-500 text-white font-semibold py-4 rounded-xl shadow-md hover:bg-sky-600">สมัครสมาชิก</button>
                     <p class="text-center mt-6 text-sm"><button type="button" onclick="toggleAuth()" class="text-slate-500 hover:underline">กลับไปเข้าสู่ระบบ</button></p>
                 </form>
             </div>
@@ -101,69 +159,168 @@
             <section id="page-dashboard" class="page-section">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div class="flex items-center gap-4 w-full md:w-auto">
-                        <div class="hidden sm:flex bg-gradient-to-br from-blue-50 to-sky-50 border border-blue-100 rounded-2xl p-3 items-center gap-3 shadow-sm min-w-[110px]"><span class="text-3xl drop-shadow-sm" id="wIcon">⛅</span><div><p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-0.5"><i class="fa-solid fa-location-dot mr-1"></i>มาบข่า</p><p class="text-lg font-extrabold text-slate-700 leading-none"><span id="wTemp">--</span><span class="text-sm text-slate-400">°</span></p></div></div>
-                        <div><h2 class="text-2xl font-bold text-slate-800" id="greetText">สวัสดี, <span id="dashName">คุณ...</span></h2><p class="text-sm font-medium text-slate-500 mt-1" id="dashAlertText">กำลังโหลดข้อมูล...</p></div>
+                        <div class="hidden sm:flex bg-gradient-to-br from-blue-50 to-sky-50 border border-blue-100 rounded-2xl p-3 items-center gap-3 shadow-sm min-w-[110px]">
+                            <span class="text-3xl drop-shadow-sm" id="wIcon">⛅</span>
+                            <div>
+                                <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-0.5"><i class="fa-solid fa-location-dot mr-1"></i>มาบข่า</p>
+                                <p class="text-lg font-extrabold text-slate-700 leading-none"><span id="wTemp">--</span><span class="text-sm text-slate-400">°</span></p>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800" id="greetText">สวัสดี, <span id="dashName">คุณ...</span></h2>
+                            <p class="text-sm font-medium text-slate-500 mt-1" id="dashAlertText">กำลังโหลดข้อมูล...</p>
+                        </div>
                     </div>
                     <div class="flex bg-white rounded-2xl p-1.5 shadow-sm border border-slate-100 w-full md:w-auto mt-2 md:mt-0">
                         <button onclick="handleCheck('Check-In', 'btnIn')" id="btnIn" class="flex-1 md:w-32 py-2.5 rounded-xl bg-blue-50 text-blue-600 font-bold text-sm hover:bg-blue-100 transition-colors"><i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้างาน</button>
                         <button onclick="handleCheck('Check-Out', 'btnOut')" id="btnOut" class="flex-1 md:w-32 py-2.5 rounded-xl text-slate-500 font-bold text-sm hover:bg-slate-100 transition-colors ml-1"><i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> ออกงาน</button>
                     </div>
                 </div>
+                
                 <div id="alertZone" class="mb-6 space-y-3"></div>
+                
                 <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">สรุปข้อมูลของฉัน</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-5 text-white shadow-sm relative overflow-hidden"><i class="fa-solid fa-umbrella-beach absolute -right-4 -bottom-4 text-6xl opacity-10"></i><p class="text-blue-100 text-xs font-semibold mb-1">พักร้อนคงเหลือ</p><h4 class="text-3xl font-extrabold"><span id="sumVacation">0</span> <span class="text-sm font-medium">วัน</span></h4></div>
-                    <div class="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl p-5 text-white shadow-sm relative overflow-hidden"><i class="fa-solid fa-briefcase-medical absolute -right-4 -bottom-4 text-6xl opacity-10"></i><p class="text-emerald-100 text-xs font-semibold mb-1">ลากิจคงเหลือ</p><h4 class="text-3xl font-extrabold"><span id="sumPersonal">0</span> <span class="text-sm font-medium">วัน</span></h4></div>
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"><p class="text-slate-400 text-xs font-semibold mb-1">เข้าสายเดือนนี้</p><h4 class="text-3xl font-extrabold text-amber-500"><span id="sumLate">0</span> <span class="text-sm font-medium">ครั้ง</span></h4></div>
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"><p class="text-slate-400 text-xs font-semibold mb-1">เวลาปัจจุบัน</p><h4 class="text-3xl font-extrabold text-slate-700" id="currentTime">00:00</h4></div>
+                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-5 text-white shadow-sm relative overflow-hidden">
+                        <i class="fa-solid fa-umbrella-beach absolute -right-4 -bottom-4 text-6xl opacity-10"></i>
+                        <p class="text-blue-100 text-xs font-semibold mb-1">พักร้อนคงเหลือ</p>
+                        <h4 class="text-3xl font-extrabold"><span id="sumVacation">0</span> <span class="text-sm font-medium">วัน</span></h4>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl p-5 text-white shadow-sm relative overflow-hidden">
+                        <i class="fa-solid fa-briefcase-medical absolute -right-4 -bottom-4 text-6xl opacity-10"></i>
+                        <p class="text-emerald-100 text-xs font-semibold mb-1">ลากิจคงเหลือ</p>
+                        <h4 class="text-3xl font-extrabold"><span id="sumPersonal">0</span> <span class="text-sm font-medium">วัน</span></h4>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <p class="text-slate-400 text-xs font-semibold mb-1">เข้าสายเดือนนี้</p>
+                        <h4 class="text-3xl font-extrabold text-amber-500"><span id="sumLate">0</span> <span class="text-sm font-medium">ครั้ง</span></h4>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <p class="text-slate-400 text-xs font-semibold mb-1">เวลาปัจจุบัน</p>
+                        <h4 class="text-3xl font-extrabold text-slate-700" id="currentTime">00:00</h4>
+                    </div>
                 </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold text-slate-800 mb-4 flex items-center"><i class="fa-regular fa-clock text-blue-500 mr-2 text-lg"></i> บันทึกเวลาวันนี้</h3><ul id="listTodayLogs" class="space-y-3"></ul></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center"><i class="fa-regular fa-clock text-blue-500 mr-2 text-lg"></i> บันทึกเวลาวันนี้</h3>
+                        <ul id="listTodayLogs" class="space-y-3"></ul>
+                    </div>
                     <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold mb-4 text-red-500 flex items-center"><i class="fa-regular fa-calendar-star mr-2"></i> วันหยุดบริษัท</h3><ul id="divHolidays" class="space-y-3"></ul></div>
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold mb-4 text-sky-500 flex items-center"><i class="fa-regular fa-bell mr-2"></i> ข่าวสาร</h3><ul id="divNews" class="space-y-3"></ul></div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="font-bold mb-4 text-red-500 flex items-center"><i class="fa-regular fa-calendar-star mr-2"></i> วันหยุดบริษัท</h3>
+                            <ul id="divHolidays" class="space-y-3"></ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="font-bold mb-4 text-sky-500 flex items-center"><i class="fa-regular fa-bell mr-2"></i> ข่าวสาร</h3>
+                            <ul id="divNews" class="space-y-3"></ul>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section id="page-calendar" class="page-section"><h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-regular fa-calendar text-blue-600 mr-2"></i> ปฏิทินวันหยุดและวันลา</h2><div id="calendar" class="mb-6"></div></section>
+            <section id="page-calendar" class="page-section">
+                <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-regular fa-calendar text-blue-600 mr-2"></i> ปฏิทินวันหยุดและวันลา</h2>
+                <div id="calendar" class="mb-6"></div>
+            </section>
 
             <section id="page-leave" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-regular fa-paper-plane text-blue-600 mr-2"></i> ส่งคำขอลาพัก</h2>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-around items-center"><div class="w-32 h-32"><canvas id="vacationChart"></canvas></div><div class="w-32 h-32"><canvas id="personalChart"></canvas></div></div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-around items-center">
+                    <div class="w-32 h-32"><canvas id="vacationChart"></canvas></div>
+                    <div class="w-32 h-32"><canvas id="personalChart"></canvas></div>
+                </div>
+                
                 <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 mb-6">
-                    <div class="mb-5"><label class="text-sm font-medium text-slate-600 mb-2 block">ประเภทการลา</label><select id="lvType" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"><option value="">-- เลือกประเภท --</option><option value="ลาพักร้อน">ลาพักร้อน</option><option value="ลากิจ">ลากิจ</option><option value="ลาป่วย">ลาป่วย</option><option value="ลาไม่รับค่าจ้าง">ลาไม่รับค่าจ้าง</option><option value="ลาอื่นๆ">ลาอื่นๆ</option></select></div>
-                    <div class="grid grid-cols-2 gap-4 mb-5"><div><label class="text-sm font-medium text-slate-600 mb-2 block">วันที่เริ่ม</label><input type="date" id="lvStart" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div><div><label class="text-sm font-medium text-slate-600 mb-2 block">ถึงวันที่</label><input type="date" id="lvEnd" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div></div>
-                    <div class="mb-5"><label class="text-sm font-medium text-slate-600 mb-2 block">ช่วงเวลา</label><select id="lvDuration" onchange="calculateLeave()" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"><option value="full">เต็มวัน (Full Day)</option><option value="morning">ครึ่งวันเช้า</option><option value="afternoon">ครึ่งวันบ่าย</option></select></div>
-                    <div class="mb-6 bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex justify-between items-center"><span class="text-sm font-medium text-emerald-700">สรุปจำนวนวันลา</span><span class="text-2xl font-bold text-emerald-600"><span id="calcDays">0</span> วัน</span></div>
+                    <div class="mb-5">
+                        <label class="text-sm font-medium text-slate-600 mb-2 block">ประเภทการลา</label>
+                        <select id="lvType" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">-- เลือกประเภท --</option>
+                            <option value="ลาพักร้อน">ลาพักร้อน</option>
+                            <option value="ลากิจ">ลากิจ</option>
+                            <option value="ลาป่วย">ลาป่วย</option>
+                            <option value="ลาไม่รับค่าจ้าง">ลาไม่รับค่าจ้าง</option>
+                            <option value="ลาอื่นๆ">ลาอื่นๆ</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-5">
+                        <div><label class="text-sm font-medium text-slate-600 mb-2 block">วันที่เริ่ม</label><input type="date" id="lvStart" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div>
+                        <div><label class="text-sm font-medium text-slate-600 mb-2 block">ถึงวันที่</label><input type="date" id="lvEnd" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div>
+                    </div>
+                    <div class="mb-5">
+                        <label class="text-sm font-medium text-slate-600 mb-2 block">ช่วงเวลา</label>
+                        <select id="lvDuration" onchange="calculateLeave()" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                            <option value="full">เต็มวัน (Full Day)</option>
+                            <option value="morning">ครึ่งวันเช้า</option>
+                            <option value="afternoon">ครึ่งวันบ่าย</option>
+                        </select>
+                    </div>
+                    <div class="mb-6 bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex justify-between items-center">
+                        <span class="text-sm font-medium text-emerald-700">สรุปจำนวนวันลา</span>
+                        <span class="text-2xl font-bold text-emerald-600"><span id="calcDays">0</span> วัน</span>
+                    </div>
                     <textarea id="lvReason" required placeholder="เหตุผลการลา..." rows="2" class="w-full mb-6 p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    <div class="mb-8 relative overflow-hidden bg-slate-50 border-2 border-dashed border-slate-300 p-6 rounded-xl text-center hover:bg-slate-100 transition-colors"><input type="file" id="lvFile" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleFileSelect(this)"><i class="fa-regular fa-image text-3xl text-slate-400 mb-2"></i><p id="fileNameTxt" class="text-sm font-medium text-slate-600">แนบเอกสาร (รูปภาพ)</p></div>
+                    
+                    <div class="mb-8 relative overflow-hidden bg-slate-50 border-2 border-dashed border-slate-300 p-6 rounded-xl text-center hover:bg-slate-100 transition-colors">
+                        <input type="file" id="lvFile" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleFileSelect(this)">
+                        <i class="fa-regular fa-image text-3xl text-slate-400 mb-2"></i>
+                        <p id="fileNameTxt" class="text-sm font-medium text-slate-600">แนบเอกสาร (รูปภาพ)</p>
+                    </div>
                     <button type="submit" id="btnSubmitLeave" class="w-full bg-blue-600 text-white font-semibold py-4 rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all shadow-md">ส่งคำขอลา</button>
                 </form>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"><div class="p-5 bg-slate-50 border-b border-slate-200"><h3 class="font-semibold text-slate-800">ประวัติของฉัน (ยกเลิกได้ถ้ารอตรวจ)</h3></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">ประเภท</th><th class="p-4 font-medium text-slate-500">วันที่</th><th class="p-4 font-medium text-slate-500 text-center">สถานะ</th></tr></thead><tbody id="tbMyLeaves"></tbody></table></div></div>
+                
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-5 bg-slate-50 border-b border-slate-200"><h3 class="font-semibold text-slate-800">ประวัติของฉัน (ยกเลิกได้ถ้ารอตรวจ)</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">ประเภท</th><th class="p-4 font-medium text-slate-500">วันที่</th><th class="p-4 font-medium text-slate-500 text-center">สถานะ</th></tr></thead><tbody id="tbMyLeaves"></tbody></table>
+                    </div>
+                </div>
             </section>
             
             <section id="page-late" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-clock text-amber-500 mr-2"></i> ขอเข้าสาย</h2>
-                <form onsubmit="handleLateSubmit(event)" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6"><input type="date" id="ltDate" required class="w-full mb-4 p-4 bg-slate-50 border border-slate-200 rounded-xl"><textarea id="ltReason" required placeholder="เหตุผลที่เข้าสาย" rows="2" class="w-full mb-4 p-4 bg-slate-50 border border-slate-200 rounded-xl"></textarea><button type="submit" id="btnSubmitLate" class="w-full bg-amber-500 text-white font-bold py-4 rounded-xl hover:bg-amber-600">ยื่นคำขอเข้าสาย</button></form>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">วันที่</th><th class="p-4 font-medium text-slate-500">เหตุผล</th><th class="p-4 text-center font-medium text-slate-500">สถานะ</th></tr></thead><tbody id="tbMyLates"></tbody></table></div>
+                <form onsubmit="handleLateSubmit(event)" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+                    <input type="date" id="ltDate" required class="w-full mb-4 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                    <textarea id="ltReason" required placeholder="เหตุผลที่เข้าสาย" rows="2" class="w-full mb-4 p-4 bg-slate-50 border border-slate-200 rounded-xl"></textarea>
+                    <button type="submit" id="btnSubmitLate" class="w-full bg-amber-500 text-white font-bold py-4 rounded-xl hover:bg-amber-600">ยื่นคำขอเข้าสาย</button>
+                </form>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left text-sm"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">วันที่</th><th class="p-4 font-medium text-slate-500">เหตุผล</th><th class="p-4 text-center font-medium text-slate-500">สถานะ</th></tr></thead><tbody id="tbMyLates"></tbody></table>
+                </div>
             </section>
 
             <section id="page-approval" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-clipboard-check text-emerald-600 mr-2"></i> อนุมัติคำขอ</h2>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">พนักงาน</th><th class="p-4 font-medium text-slate-500">รายการ</th><th class="p-4 font-medium text-slate-500 text-center">เอกสาร</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbApproval"></tbody></table></div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">พนักงาน</th><th class="p-4 font-medium text-slate-500">รายการ</th><th class="p-4 font-medium text-slate-500 text-center">เอกสาร</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbApproval"></tbody></table>
+                </div>
             </section>
 
             <section id="page-executive" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-chart-pie text-sky-600 mr-2"></i> รายงานสถิติผู้บริหาร</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold text-slate-700 mb-4 text-center">วันลาสะสม (รายแผนก)</h3><canvas id="chartDeptLeaves"></canvas></div><div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold text-slate-700 mb-4 text-center">เข้าสายสะสม (รายแผนก)</h3><canvas id="chartDeptLates"></canvas></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold text-slate-700 mb-4 text-center">วันลาสะสม (รายแผนก)</h3><canvas id="chartDeptLeaves"></canvas></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><h3 class="font-bold text-slate-700 mb-4 text-center">เข้าสายสะสม (รายแผนก)</h3><canvas id="chartDeptLates"></canvas></div>
+                </div>
                 
                 <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm">
                     <h3 class="font-bold text-slate-800 mb-4 text-lg"><i class="fa-solid fa-table border mr-2 text-blue-500 p-1 rounded bg-blue-50"></i> ดึงข้อมูลและดูตัวอย่าง (Report Generator)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div class="md:col-span-2"><label class="text-xs font-bold text-slate-500 mb-2 block">ประเภทข้อมูล</label><select id="repType" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm text-slate-700 font-medium"><option value="payroll">สรุปเพื่อทำเงินเดือน (Payroll Summary)</option><option value="timelog">ประวัติการลงเวลาเข้า-ออก (Time Logs)</option><option value="leave">ประวัติการลา (Leave Records)</option></select></div>
-                        <div class="md:col-span-2"><label class="text-xs font-bold text-slate-500 mb-2 block">แผนก (Department)</label><select id="repDept" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm text-slate-700 font-medium"><option value="ALL">ดึงข้อมูลทุกแผนก</option></select></div>
+                        <div class="md:col-span-2">
+                            <label class="text-xs font-bold text-slate-500 mb-2 block">ประเภทข้อมูล</label>
+                            <select id="repType" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm text-slate-700 font-medium">
+                                <option value="payroll">สรุปเพื่อทำเงินเดือน (Payroll Summary)</option>
+                                <option value="timelog">ประวัติการลงเวลาเข้า-ออก (Time Logs)</option>
+                                <option value="leave">ประวัติการลา (Leave Records)</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="text-xs font-bold text-slate-500 mb-2 block">แผนก (Department)</label>
+                            <select id="repDept" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm text-slate-700 font-medium">
+                                <option value="ALL">ดึงข้อมูลทุกแผนก</option>
+                            </select>
+                        </div>
                         <div class="md:col-span-2"><label class="text-xs font-bold text-slate-500 mb-2 block">ตั้งแต่วันที่</label><input type="date" id="repStart" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700"></div>
                         <div class="md:col-span-2"><label class="text-xs font-bold text-slate-500 mb-2 block">ถึงวันที่</label><input type="date" id="repEnd" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700"></div>
                     </div>
@@ -172,32 +329,98 @@
 
                 <div id="reportTableContainer" class="hidden bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm mt-6">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
-                        <div class="flex items-center gap-2 w-full md:w-auto"><label class="text-sm font-medium text-slate-500">แสดง</label><select id="rowsPerPage" onchange="changeRows(this.value)" class="p-2 border border-slate-200 bg-slate-50 rounded-lg text-sm outline-none font-bold text-blue-600"><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="300">300</option><option value="all">ทั้งหมด</option></select><label class="text-sm font-medium text-slate-500">รายการ</label></div>
+                        <div class="flex items-center gap-2 w-full md:w-auto">
+                            <label class="text-sm font-medium text-slate-500">แสดง</label>
+                            <select id="rowsPerPage" onchange="changeRows(this.value)" class="p-2 border border-slate-200 bg-slate-50 rounded-lg text-sm outline-none font-bold text-blue-600">
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="300">300</option>
+                                <option value="all">ทั้งหมด</option>
+                            </select>
+                            <label class="text-sm font-medium text-slate-500">รายการ</label>
+                        </div>
                         <button onclick="exportCurrentReport()" class="w-full md:w-auto bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-emerald-600 transition-all active:scale-95"><i class="fa-solid fa-file-excel mr-2"></i>Export CSV</button>
                     </div>
-                    <div class="overflow-x-auto max-h-[500px] border border-slate-200 rounded-xl relative shadow-inner"><table class="w-full text-sm text-left report-table"><thead id="repThead" class="text-slate-600 font-semibold tracking-wide uppercase text-xs"></thead><tbody id="repTbody" class="divide-y divide-slate-100 text-slate-700"></tbody></table></div>
-                    <div class="flex justify-between items-center mt-4 text-sm text-slate-500 font-medium"><div id="repInfo">แสดง 0 ถึง 0 จาก 0 รายการ</div><div class="flex gap-2"><button onclick="changePage(-1)" class="px-4 py-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-lg transition-colors"><i class="fa-solid fa-chevron-left"></i></button><button onclick="changePage(1)" class="px-4 py-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-lg transition-colors"><i class="fa-solid fa-chevron-right"></i></button></div></div>
+                    <div class="overflow-x-auto max-h-[500px] border border-slate-200 rounded-xl relative shadow-inner">
+                        <table class="w-full text-sm text-left report-table">
+                            <thead id="repThead" class="text-slate-600 font-semibold tracking-wide uppercase text-xs"></thead>
+                            <tbody id="repTbody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-between items-center mt-4 text-sm text-slate-500 font-medium">
+                        <div id="repInfo">แสดง 0 ถึง 0 จาก 0 รายการ</div>
+                        <div class="flex gap-2">
+                            <button onclick="changePage(-1)" class="px-4 py-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-lg transition-colors"><i class="fa-solid fa-chevron-left"></i></button>
+                            <button onclick="changePage(1)" class="px-4 py-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-lg transition-colors"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <section id="page-profile" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800">บัญชีของฉัน</h2>
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row items-center gap-8 mb-6"><img id="qrCodeImg" src="" class="w-32 h-32 rounded-xl border border-slate-200 p-2 shadow-sm"><div class="text-center md:text-left"><p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">Digital ID</p><h3 class="text-2xl font-bold text-slate-800 mb-1" id="cardName">-</h3><p class="text-slate-500" id="cardEmpId">-</p><span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-medium inline-block mt-3" id="cardDept">-</span></div></div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row items-center gap-8 mb-6">
+                    <img id="qrCodeImg" src="" class="w-32 h-32 rounded-xl border border-slate-200 p-2 shadow-sm">
+                    <div class="text-center md:text-left">
+                        <p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">Digital ID</p>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1" id="cardName">-</h3>
+                        <p class="text-slate-500" id="cardEmpId">-</p>
+                        <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-medium inline-block mt-3" id="cardDept">-</span>
+                    </div>
+                </div>
                 <form onsubmit="handleProfileUpdate(event)" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5"><div><label class="text-xs font-medium text-slate-500 mb-2 block">รหัสพนักงาน</label><input type="text" id="pfEmpId" readonly class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"></div><div><label class="text-xs font-medium text-slate-500 mb-2 block">ชื่อ-นามสกุล</label><input type="text" id="pfName" required class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div></div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6"><div><label class="text-xs font-medium text-slate-500 mb-2 block">แผนก</label><input type="text" id="pfDept" readonly class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"></div><div><label class="text-xs font-medium text-slate-500 mb-2 block">เปลี่ยนรหัสผ่าน</label><input type="password" id="pfPassword" placeholder="(ปล่อยว่างถ้าไม่เปลี่ยน)" class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                        <div><label class="text-xs font-medium text-slate-500 mb-2 block">รหัสพนักงาน</label><input type="text" id="pfEmpId" readonly class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"></div>
+                        <div><label class="text-xs font-medium text-slate-500 mb-2 block">ชื่อ-นามสกุล</label><input type="text" id="pfName" required class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                        <div><label class="text-xs font-medium text-slate-500 mb-2 block">แผนก</label><input type="text" id="pfDept" readonly class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"></div>
+                        <div><label class="text-xs font-medium text-slate-500 mb-2 block">เปลี่ยนรหัสผ่าน</label><input type="password" id="pfPassword" placeholder="(ปล่อยว่างถ้าไม่เปลี่ยน)" class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div>
+                    </div>
                     <button type="submit" id="btnUpdateProf" class="w-full bg-blue-600 text-white font-semibold py-4 rounded-xl hover:bg-blue-700 active:scale-[0.98] transition-all">บันทึกข้อมูล</button>
                 </form>
             </section>
             
             <section id="page-settings" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-gear text-blue-600 mr-2"></i> ตั้งค่าระบบและแอดมิน</h2>
-                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 mb-6"><h3 class="font-bold text-blue-800 mb-4"><i class="fa-solid fa-map-location-dot mr-2"></i> พิกัดสาขา</h3><div class="bg-white rounded-xl overflow-hidden border border-blue-100 mb-4"><table class="w-full text-sm text-left"><thead class="bg-slate-50"><tr><th class="p-3">Lat, Lng</th><th class="p-3">รัศมี (ม.)</th><th class="p-3 text-center">ลบ</th></tr></thead><tbody id="tbGeofence"></tbody></table></div><form onsubmit="handleAddGeofence(event)" class="flex gap-2"><input type="text" id="gLat" placeholder="Lat" required class="flex-1 p-3 rounded-lg border border-slate-200 text-sm"><input type="text" id="gLng" placeholder="Lng" required class="flex-1 p-3 rounded-lg border border-slate-200 text-sm"><input type="number" id="gRad" placeholder="รัศมี" required class="w-20 p-3 rounded-lg border border-slate-200 text-sm"><button type="submit" class="bg-blue-600 text-white px-4 rounded-lg font-bold hover:bg-blue-700 transition-colors">+</button></form></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><h3 class="font-bold text-slate-800 mb-4 text-red-500">ตั้งค่าวันหยุดบริษัท</h3><form onsubmit="req({action:'addHoliday', date:document.getElementById('hDate').value, title:document.getElementById('hTitle').value}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})" class="flex gap-2 mb-4"><input type="date" id="hDate" required class="w-full p-2 border rounded-lg text-sm"><input type="text" id="hTitle" placeholder="ชื่อวันหยุด" required class="w-full p-2 border rounded-lg text-sm"><button type="submit" class="bg-red-500 text-white px-3 rounded-lg hover:bg-red-600 transition-colors">+</button></form><ul id="listSettingHolidays" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul></div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"><h3 class="font-bold text-slate-800 mb-4 text-sky-500">จัดการข่าวสาร</h3><form onsubmit="req({action:'addNews', date:document.getElementById('nDate').value, title:document.getElementById('nTitle').value, content:document.getElementById('nContent').value, author:getDecryptedUser().name}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})"><input type="date" id="nDate" required class="w-full mb-2 p-2 border rounded-lg text-sm"><input type="text" id="nTitle" placeholder="หัวข้อ" required class="w-full mb-2 p-2 border rounded-lg text-sm"><textarea id="nContent" placeholder="รายละเอียด..." required class="w-full mb-2 p-2 border rounded-lg text-sm"></textarea><button type="submit" class="w-full bg-sky-500 text-white font-bold py-2 rounded-lg text-sm mb-4 hover:bg-sky-600 transition-colors">เพิ่มประกาศ</button></form><ul id="listSettingNews" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul></div>
+                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 mb-6">
+                    <h3 class="font-bold text-blue-800 mb-4"><i class="fa-solid fa-map-location-dot mr-2"></i> พิกัดสาขา</h3>
+                    <div class="bg-white rounded-xl overflow-hidden border border-blue-100 mb-4"><table class="w-full text-sm text-left"><thead class="bg-slate-50"><tr><th class="p-3">Lat, Lng</th><th class="p-3">รัศมี (ม.)</th><th class="p-3 text-center">ลบ</th></tr></thead><tbody id="tbGeofence"></tbody></table></div>
+                    <form onsubmit="handleAddGeofence(event)" class="flex gap-2">
+                        <input type="text" id="gLat" placeholder="Lat" required class="flex-1 p-3 rounded-lg border border-slate-200 text-sm">
+                        <input type="text" id="gLng" placeholder="Lng" required class="flex-1 p-3 rounded-lg border border-slate-200 text-sm">
+                        <input type="number" id="gRad" placeholder="รัศมี" required class="w-20 p-3 rounded-lg border border-slate-200 text-sm">
+                        <button type="submit" class="bg-blue-600 text-white px-4 rounded-lg font-bold hover:bg-blue-700 transition-colors">+</button>
+                    </form>
                 </div>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6"><div class="p-5 bg-slate-50 border-b border-slate-200 flex justify-between items-center"><h3 class="font-semibold text-slate-800">จัดการพนักงาน</h3></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">ID</th><th class="p-4 font-medium text-slate-500">ชื่อ/แผนก</th><th class="p-4 font-medium text-slate-500">สิทธิ์</th><th class="p-4 font-medium text-slate-500">หัวหน้างาน</th><th class="p-4 font-medium text-slate-500 text-center">โควต้า</th><th class="p-4 font-medium text-slate-500">สถานะ</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbAdmin"></tbody></table></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-4 text-red-500">ตั้งค่าวันหยุดบริษัท</h3>
+                        <form onsubmit="req({action:'addHoliday', date:document.getElementById('hDate').value, title:document.getElementById('hTitle').value}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})" class="flex gap-2 mb-4">
+                            <input type="date" id="hDate" required class="w-full p-2 border rounded-lg text-sm">
+                            <input type="text" id="hTitle" placeholder="ชื่อวันหยุด" required class="w-full p-2 border rounded-lg text-sm">
+                            <button type="submit" class="bg-red-500 text-white px-3 rounded-lg hover:bg-red-600 transition-colors">+</button>
+                        </form>
+                        <ul id="listSettingHolidays" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-4 text-blue-500">จัดการข่าวสาร</h3>
+                        <form onsubmit="req({action:'addNews', date:document.getElementById('nDate').value, title:document.getElementById('nTitle').value, content:document.getElementById('nContent').value, author:getDecryptedUser().name}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})">
+                            <input type="date" id="nDate" required class="w-full mb-2 p-2 border rounded-lg text-sm">
+                            <input type="text" id="nTitle" placeholder="หัวข้อ" required class="w-full mb-2 p-2 border rounded-lg text-sm">
+                            <textarea id="nContent" placeholder="รายละเอียด..." required class="w-full mb-2 p-2 border rounded-lg text-sm"></textarea>
+                            <button type="submit" class="w-full bg-blue-500 text-white font-bold py-2 rounded-lg text-sm mb-4 hover:bg-blue-600 transition-colors">เพิ่มประกาศ</button>
+                        </form>
+                        <ul id="listSettingNews" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+                    <div class="p-5 bg-slate-50 border-b border-slate-200 flex justify-between items-center"><h3 class="font-semibold text-slate-800">จัดการพนักงาน</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-200"><tr><th class="p-4 font-medium text-slate-500">ID</th><th class="p-4 font-medium text-slate-500">ชื่อ/แผนก</th><th class="p-4 font-medium text-slate-500">สิทธิ์</th><th class="p-4 font-medium text-slate-500">หัวหน้างาน</th><th class="p-4 font-medium text-slate-500 text-center">โควต้า</th><th class="p-4 font-medium text-slate-500">สถานะ</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbAdmin"></tbody></table>
+                    </div>
+                </div>
             </section>
 
         </div>
@@ -223,7 +446,9 @@
     <nav class="md:hidden fixed bottom-0 w-full bg-white/95 backdrop-blur-xl shadow-[0_-5px_20px_rgba(0,0,0,0.03)] z-40 flex justify-around items-center h-20 border-t border-slate-200 pb-safe px-2">
         <button onclick="navigate('dashboard')" class="nav-btn text-blue-600 flex flex-col items-center justify-center w-full h-full transition-colors"><i class="fa-solid fa-chart-pie text-2xl mb-1"></i><span class="text-[9px] font-semibold">ภาพรวม</span></button>
         <button onclick="navigate('calendar')" class="nav-btn text-slate-400 flex flex-col items-center justify-center w-full h-full transition-colors"><i class="fa-regular fa-calendar-days text-2xl mb-1"></i><span class="text-[9px] font-semibold">ปฏิทิน</span></button>
-        <div class="relative -top-5 px-2"><button onclick="navigate('leave')" class="bg-blue-600 text-white w-14 h-14 rounded-2xl shadow-lg shadow-blue-200/50 flex flex-col items-center justify-center text-xl active:scale-95 transition-all"><i class="fa-solid fa-plus mb-0.5"></i><span class="text-[8px] font-medium">ขอลา</span></button></div>
+        <div class="relative -top-5 px-2">
+            <button onclick="navigate('leave')" class="bg-blue-600 text-white w-14 h-14 rounded-2xl shadow-lg shadow-blue-200/50 flex flex-col items-center justify-center text-xl active:scale-95 transition-all"><i class="fa-solid fa-plus mb-0.5"></i><span class="text-[8px] font-medium">ขอลา</span></button>
+        </div>
         <button onclick="navigate('approval')" id="menu-approval-mob" class="hidden nav-btn flex-col items-center justify-center w-full h-full text-emerald-500 transition-colors"><i class="fa-solid fa-clipboard-check text-2xl mb-1"></i><span class="text-[9px] font-semibold">อนุมัติ</span></button>
         <button onclick="toggleMobileMenu()" class="text-slate-400 flex flex-col items-center justify-center w-full h-full transition-colors hover:text-blue-600"><i class="fa-solid fa-bars text-2xl mb-1"></i><span class="text-[9px] font-semibold">เมนู</span></button>
     </nav>
@@ -233,72 +458,125 @@
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzhm8RBGlPnm1u4DnRIQ1LQU-23xTBxmrBuXy1H1mgcd3xpgQ-lRZ49_E7pHLEjT2Zc9A/exec"; 
 
         const setEncryptedUser = (user) => localStorage.setItem('secureHQUser', btoa(encodeURIComponent(JSON.stringify(user))));
-        const getDecryptedUser = () => { try { return JSON.parse(decodeURIComponent(atob(localStorage.getItem('secureHQUser')))); } catch(e) { return null; } };
+        const getDecryptedUser = () => { 
+            try { return JSON.parse(decodeURIComponent(atob(localStorage.getItem('secureHQUser')))); } 
+            catch(e) { return null; } 
+        };
         const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
         
         let vChart, pChart, fcCalendar, cDeptLeaves, cDeptLates, compressedBase64 = null;
 
         window.onload = () => {
             const user = getDecryptedUser();
-            if(user) setTimeout(() => { setupDashboard(user); }, 1200); 
-            else { document.querySelector('.splash-screen').style.display = 'none'; document.getElementById('login-section').classList.add('page-active'); }
+            if(user) {
+                setTimeout(() => { setupDashboard(user); }, 1200); 
+            } else { 
+                document.querySelector('.splash-screen').style.display = 'none'; 
+                document.getElementById('login-section').classList.add('page-active'); 
+            }
             
-            setInterval(() => document.getElementById('currentTime').innerText = new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}), 1000);
+            setInterval(() => {
+                document.getElementById('currentTime').innerText = new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'});
+            }, 1000);
             
             const today = new Date();
-            document.getElementById('lvStart').value = today.toISOString().split('T')[0]; document.getElementById('lvEnd').value = today.toISOString().split('T')[0];
+            document.getElementById('lvStart').value = today.toISOString().split('T')[0]; 
+            document.getElementById('lvEnd').value = today.toISOString().split('T')[0];
             document.getElementById('ltDate').value = today.toISOString().split('T')[0];
             
-            let startD = new Date(today.getFullYear(), today.getMonth() - 1, 26); let endD = new Date(today.getFullYear(), today.getMonth(), 25);
+            let startD = new Date(today.getFullYear(), today.getMonth() - 1, 26); 
+            let endD = new Date(today.getFullYear(), today.getMonth(), 25);
             const adjustTz = (d) => new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-            document.getElementById('repStart').value = adjustTz(startD); document.getElementById('repEnd').value = adjustTz(endD);
+            document.getElementById('repStart').value = adjustTz(startD); 
+            document.getElementById('repEnd').value = adjustTz(endD);
         };
 
         // 🔘 Micro-Interactions (Button Spinner)
-        function btnLoad(id, st, txt) { const b = document.getElementById(id); if(!b) return; if(st) { b.classList.add('btn-loading'); b.disabled=true; } else { b.classList.remove('btn-loading'); b.disabled=false; if(txt) b.innerHTML = txt; } }
+        function btnLoad(id, st, txt) { 
+            const b = document.getElementById(id); 
+            if(!b) return; 
+            if(st) { 
+                b.classList.add('btn-loading'); b.disabled=true; 
+            } else { 
+                b.classList.remove('btn-loading'); b.disabled=false; 
+                if(txt) b.innerHTML = txt; 
+            } 
+        }
         
         // 🎨 Mobile Menu Drawer
         function toggleMobileMenu() {
-            const ol = document.getElementById('mobileMenuOverlay'); const dr = document.getElementById('mobileMenuDrawer');
-            if(dr.classList.contains('translate-x-full')) { ol.classList.remove('hidden'); setTimeout(()=>ol.classList.remove('opacity-0'), 10); dr.classList.remove('translate-x-full'); } 
-            else { ol.classList.add('opacity-0'); dr.classList.add('translate-x-full'); setTimeout(()=>ol.classList.add('hidden'), 300); }
+            const ol = document.getElementById('mobileMenuOverlay'); 
+            const dr = document.getElementById('mobileMenuDrawer');
+            if(dr.classList.contains('translate-x-full')) { 
+                ol.classList.remove('hidden'); setTimeout(()=>ol.classList.remove('opacity-0'), 10); 
+                dr.classList.remove('translate-x-full'); 
+            } else { 
+                ol.classList.add('opacity-0'); dr.classList.add('translate-x-full'); 
+                setTimeout(()=>ol.classList.add('hidden'), 300); 
+            }
         }
 
         async function fetchWeather(userName) {
             try {
-                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=12.78&longitude=101.18&current_weather=true"); const data = await res.json();
-                const wCode = data.current_weather.weathercode; const temp = Math.round(data.current_weather.temperature);
+                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=12.78&longitude=101.18&current_weather=true"); 
+                const data = await res.json();
+                const wCode = data.current_weather.weathercode; 
+                const temp = Math.round(data.current_weather.temperature);
                 let wIcon = "☀️"; let wMsg = "อากาศแจ่มใส ลุยงานให้เต็มที่เลยครับ"; 
                 if (wCode >= 1 && wCode <= 3) { wIcon = "⛅"; wMsg = "อากาศกำลังดี ขอให้เป็นวันที่ยอดเยี่ยมครับ"; }
                 else if (wCode >= 45 && wCode <= 48) { wIcon = "🌫️"; wMsg = "มีหมอกลง ขับขี่ด้วยความระมัดระวังนะครับ"; }
                 else if (wCode >= 51 && wCode <= 65 || wCode >= 80 && wCode <= 82) { wIcon = "🌧️"; wMsg = "ฝนตก อย่าลืมพกร่มและดูแลสุขภาพด้วยครับ"; }
                 else if (wCode >= 95 && wCode <= 99) { wIcon = "⛈️"; wMsg = "ฝนฟ้าคะนองรุนแรง ระมัดระวังการเดินทางเป็นพิเศษครับ"; }
-                document.getElementById('wIcon').innerText = wIcon; document.getElementById('wTemp').innerText = temp;
-                const hour = new Date().getHours(); let timeGreet = hour < 12 ? 'อรุณสวัสดิ์' : hour < 18 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น';
-                document.getElementById('greetText').innerHTML = `${timeGreet} ${wIcon} <span class="text-blue-600">${userName}</span>`; document.getElementById('dashAlertText').innerHTML = `<span class="text-blue-500 font-bold">${wMsg}</span>`;
+                
+                document.getElementById('wIcon').innerText = wIcon; 
+                document.getElementById('wTemp').innerText = temp;
+                const hour = new Date().getHours(); 
+                let timeGreet = hour < 12 ? 'อรุณสวัสดิ์' : hour < 18 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น';
+                document.getElementById('greetText').innerHTML = `${timeGreet} ${wIcon} <span class="text-blue-600">${userName}</span>`; 
+                document.getElementById('dashAlertText').innerHTML = `<span class="text-blue-500 font-bold">${wMsg}</span>`;
             } catch (e) { document.getElementById('dashAlertText').innerText = "ยินดีต้อนรับสู่ระบบ SmartHQ ครับ"; }
         }
 
-        function toggleAuth() { document.getElementById('loginForm').classList.toggle('hidden'); document.getElementById('registerForm').classList.toggle('hidden'); }
-        function toggleDarkMode() { document.documentElement.classList.toggle('dark'); localStorage.setItem('smartOfficeTheme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); }
+        function toggleAuth() { 
+            document.getElementById('loginForm').classList.toggle('hidden'); 
+            document.getElementById('registerForm').classList.toggle('hidden'); 
+        }
+        
+        function toggleDarkMode() { 
+            document.documentElement.classList.toggle('dark'); 
+            localStorage.setItem('smartOfficeTheme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); 
+        }
+        
         function refreshData() { navigate(document.querySelector('.page-active').id.replace('page-', '')); }
 
         function setupDashboard(user) {
-            document.getElementById('login-section').classList.remove('page-active'); document.getElementById('login-section').style.display = 'none';
+            document.getElementById('login-section').classList.remove('page-active'); 
+            document.getElementById('login-section').style.display = 'none';
             document.querySelector('.splash-screen').style.display = 'none';
             fetchWeather(user.name.split(' ')[0]);
             
-            document.getElementById('topName').innerText = user.name; document.getElementById('topRole').innerText = user.role;
+            document.getElementById('topName').innerText = user.name; 
+            document.getElementById('topRole').innerText = user.role;
             document.getElementById('topAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=2563eb&color=fff`;
             
-            if(['Manager', 'HR', 'Admin'].includes(user.role)) { document.getElementById('menu-approval-mob').classList.remove('hidden'); document.getElementById('menu-approval-mob').classList.add('flex'); document.getElementById('menu-approval-desk').classList.remove('hidden'); }
-            if(['HR', 'Admin'].includes(user.role)) { document.getElementById('menu-exec-desk').classList.remove('hidden'); document.getElementById('drawer-exec').classList.remove('hidden'); document.getElementById('drawer-exec').classList.add('flex'); }
-            if(user.role === 'Admin') { document.getElementById('topSettingsBtn').classList.remove('hidden'); document.getElementById('drawer-set').classList.remove('hidden'); document.getElementById('drawer-set').classList.add('flex'); }
+            if(['Manager', 'HR', 'Admin'].includes(user.role)) { 
+                document.getElementById('menu-approval-mob').classList.remove('hidden'); document.getElementById('menu-approval-mob').classList.add('flex'); 
+                document.getElementById('menu-approval-desk').classList.remove('hidden'); 
+            }
+            if(['HR', 'Admin'].includes(user.role)) { 
+                document.getElementById('menu-exec-desk').classList.remove('hidden'); 
+                document.getElementById('drawer-exec').classList.remove('hidden'); document.getElementById('drawer-exec').classList.add('flex'); 
+            }
+            if(user.role === 'Admin') { 
+                document.getElementById('topSettingsBtn').classList.remove('hidden'); 
+                document.getElementById('drawer-set').classList.remove('hidden'); document.getElementById('drawer-set').classList.add('flex'); 
+            }
             navigate('dashboard');
         }
 
         function navigate(page) {
             const userRole = getDecryptedUser()?.role;
+            if (page === 'profile' && userRole === 'Admin') page = 'settings'; 
             if (page === 'admin' && userRole !== 'Admin') return Swal.fire('ปฏิเสธการเข้าถึง', 'คุณไม่มีสิทธิ์เข้าใช้งานหน้านี้', 'error');
             if (page === 'settings' && userRole !== 'Admin') return Swal.fire('ปฏิเสธการเข้าถึง', 'คุณไม่มีสิทธิ์เข้าใช้งานหน้านี้', 'error');
             if (page === 'executive' && !['HR', 'Admin'].includes(userRole)) return Swal.fire('ปฏิเสธการเข้าถึง', 'สำหรับฝ่ายบุคคลเท่านั้น', 'error');
@@ -310,7 +588,8 @@
             document.querySelectorAll('.nav-btn').forEach(btn => { if(!btn.id.includes('approval')) btn.classList.replace('text-blue-600', 'text-slate-400') });
             if(event && event.currentTarget.classList.contains('nav-btn') && !event.currentTarget.id.includes('approval')) event.currentTarget.classList.replace('text-slate-400', 'text-blue-600');
             
-            const aCls = ['text-blue-600', 'bg-white', 'border-blue-200', 'shadow-sm']; const iCls = ['text-slate-500', 'border-transparent', 'hover:bg-slate-50', 'hover:border-slate-200'];
+            const aCls = ['text-blue-600', 'bg-white', 'border-blue-200', 'shadow-sm']; 
+            const iCls = ['text-slate-500', 'border-transparent', 'hover:bg-slate-50', 'hover:border-slate-200'];
             document.querySelectorAll('.nav-btn-desk').forEach(btn => { if(!btn.id.includes('approval')) { btn.classList.remove(...aCls, 'text-sky-600', 'border-sky-200'); btn.classList.add(...iCls); } });
             
             let curBtn = null;
@@ -320,7 +599,11 @@
             else if (page === 'leave') curBtn = document.getElementById('nav-btn-leave');
             else if (page === 'executive') curBtn = document.getElementById('menu-exec-desk');
 
-            if(curBtn && !curBtn.id.includes('approval')) { curBtn.classList.remove(...iCls); if(page === 'executive') curBtn.classList.add('text-sky-600', 'bg-white', 'border-sky-200', 'shadow-sm'); else curBtn.classList.add(...aCls); }
+            if(curBtn && !curBtn.id.includes('approval')) { 
+                curBtn.classList.remove(...iCls); 
+                if(page === 'executive') curBtn.classList.add('text-sky-600', 'bg-white', 'border-sky-200', 'shadow-sm'); 
+                else curBtn.classList.add(...aCls); 
+            }
             
             if(['dashboard', 'calendar', 'leave'].includes(page)) loadSummaryBoard();
             if(page === 'late') loadLateHistory();
@@ -332,14 +615,42 @@
 
         async function req(data, isBackground = false) {
             if(!isBackground) Toast.fire({ icon: 'info', title: 'กำลังโหลดข้อมูล...' });
-            try { const res = await fetch(data.action.startsWith('get') ? `${GAS_URL}?action=${data.action}${data.empId?'&empId='+data.empId:''}${data.role?'&role='+data.role:''}` : GAS_URL, data.action.startsWith('get') ? {} : { method: 'POST', body: JSON.stringify(data) }); return await res.json(); } 
+            try { 
+                const res = await fetch(data.action.startsWith('get') ? `${GAS_URL}?action=${data.action}${data.empId?'&empId='+data.empId:''}${data.role?'&role='+data.role:''}` : GAS_URL, data.action.startsWith('get') ? {} : { method: 'POST', body: JSON.stringify(data) }); 
+                return await res.json(); 
+            } 
             catch(error) { Toast.fire({ icon: 'error', title: 'การเชื่อมต่อล้มเหลว' }); throw error; }
         }
 
         // --- Core Functions ---
-        async function handleLogin(e) { e.preventDefault(); btnLoad('btnLogin', true); const res = await req({ action: "login", empId: document.getElementById('empId').value, password: document.getElementById('password').value }, true); btnLoad('btnLogin', false, 'เข้าสู่ระบบ'); if(res.status === 'success') { setEncryptedUser(res.userData); setupDashboard(res.userData); } else Swal.fire('ข้อผิดพลาด', res.message, 'error'); }
-        async function handleRegister(e) { e.preventDefault(); btnLoad('btnReg', true); const res = await req({ action: "register", empId: document.getElementById('regEmpId').value, name: document.getElementById('regName').value, department: document.getElementById('regDept').value, password: document.getElementById('regPassword').value }, true); btnLoad('btnReg', false, 'สมัครสมาชิก'); Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status).then(()=>res.status==='success'&&toggleAuth()); }
-        async function handleCheck(type, btnId) { if(!navigator.geolocation) return Swal.fire('Error','เปิด GPS ด้วยครับ','error'); if(btnId) btnLoad(btnId, true); Toast.fire({title:'กำลังบันทึกพิกัด...'}); navigator.geolocation.getCurrentPosition(async (pos) => { const res = await req({ action: "checkInOut", empId: getDecryptedUser().empId, type: type, lat: pos.coords.latitude, lng: pos.coords.longitude }); if(btnId) btnLoad(btnId, false, type==='Check-In'?'<i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้างาน':'<i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> ออกงาน'); Swal.fire('ระบบบันทึกเวลา', res.message, res.status).then(loadSummaryBoard); }, () => {if(btnId) btnLoad(btnId, false, type); Swal.fire('Error','กรุณาอนุญาต GPS','error');}, {enableHighAccuracy: true}); }
+        async function handleLogin(e) { 
+            e.preventDefault(); btnLoad('btnLogin', true); 
+            const res = await req({ action: "login", empId: document.getElementById('empId').value, password: document.getElementById('password').value }, true); 
+            btnLoad('btnLogin', false, 'เข้าสู่ระบบ'); 
+            if(res.status === 'success') { setEncryptedUser(res.userData); setupDashboard(res.userData); } 
+            else Swal.fire('ข้อผิดพลาด', res.message, 'error'); 
+        }
+        
+        async function handleRegister(e) { 
+            e.preventDefault(); btnLoad('btnReg', true); 
+            const res = await req({ action: "register", empId: document.getElementById('regEmpId').value, name: document.getElementById('regName').value, department: document.getElementById('regDept').value, password: document.getElementById('regPassword').value }, true); 
+            btnLoad('btnReg', false, 'สมัครสมาชิก'); 
+            Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status).then(()=>res.status==='success'&&toggleAuth()); 
+        }
+        
+        async function handleCheck(type, btnId) { 
+            if(!navigator.geolocation) return Swal.fire('Error','เปิด GPS ด้วยครับ','error'); 
+            if(btnId) btnLoad(btnId, true); 
+            Toast.fire({title:'กำลังบันทึกพิกัด...'}); 
+            navigator.geolocation.getCurrentPosition(async (pos) => { 
+                const res = await req({ action: "checkInOut", empId: getDecryptedUser().empId, type: type, lat: pos.coords.latitude, lng: pos.coords.longitude }); 
+                if(btnId) btnLoad(btnId, false, type==='Check-In'?'<i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้างาน':'<i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> ออกงาน'); 
+                Swal.fire('ระบบบันทึกเวลา', res.message, res.status).then(loadSummaryBoard); 
+            }, () => {
+                if(btnId) btnLoad(btnId, false, type); 
+                Swal.fire('Error','กรุณาอนุญาต GPS','error');
+            }, {enableHighAccuracy: true}); 
+        }
 
         const getBadge = (s) => s==='Approved'?'<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md text-[10px] font-bold">อนุมัติ</span>':(s==='Rejected'?'<span class="bg-red-100 text-red-700 px-2 py-1 rounded-md text-[10px] font-bold">ไม่อนุมัติ</span>':(s==='Canceled'?'<span class="bg-slate-100 text-slate-500 px-2 py-1 rounded-md text-[10px] font-bold line-through">ยกเลิก</span>':'<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-md text-[10px] font-bold">รอตรวจ</span>'));
         const emptyState = (msg, icon='fa-folder-open') => `<tr><td colspan="10" class="p-12 text-center text-slate-400"><i class="fa-regular ${icon} text-5xl mb-4 text-slate-200 block"></i><p class="text-sm font-semibold">${msg}</p></td></tr>`;
@@ -349,8 +660,8 @@
             const user = getDecryptedUser(); if(!user) return;
             req({ action: "getSummaryBoard", empId: user.empId, role: user.role }, true).then(res => {
                 const d = res.data;
-                document.getElementById('sumVacation').innerText = user.leaveVacation - d.stats.vacationUsed;
-                document.getElementById('sumPersonal').innerText = user.leavePersonal - d.stats.personalUsed;
+                document.getElementById('sumVacation').innerText = user.leaveVacation - d.stats.vacationUsed; 
+                document.getElementById('sumPersonal').innerText = user.leavePersonal - d.stats.personalUsed; 
                 document.getElementById('sumLate').innerText = d.stats.lateUsed;
 
                 let alertsHTML = '';
@@ -378,8 +689,21 @@
 
         async function cancelLeave(r, sheet) { if(!confirm('ยืนยันยกเลิกคำขอลา?')) return; const res = await req({ action: "cancelLeave", row: r, sheetName: sheet }); Toast.fire({ icon: 'success', title: res.message }); loadSummaryBoard(); }
 
-        function calculateLeave() { const startStr = document.getElementById('lvStart').value; const endStr = document.getElementById('lvEnd').value; const duration = document.getElementById('lvDuration').value; const btn = document.getElementById('btnSubmitLeave'); const resultTxt = document.getElementById('calcDays'); if(!startStr || !endStr || new Date(startStr) > new Date(endStr)) { resultTxt.innerText = "0"; btn.disabled = true; return; } if(startStr !== endStr && duration !== 'full') { Swal.fire('เตือน','ลาข้ามวันต้องเลือก "เต็มวัน" เท่านั้นครับ','info'); document.getElementById('lvDuration').value = 'full'; return calculateLeave(); } const restDaysArr = (getDecryptedUser().restDays || "0,6").split(',').map(Number); let totalDays = 0; let current = new Date(startStr); const end = new Date(endStr); while (current <= end) { if (!restDaysArr.includes(current.getDay())) totalDays += 1; current.setDate(current.getDate() + 1); } if (totalDays > 0 && duration !== 'full') totalDays = 0.5; resultTxt.innerText = totalDays; btn.disabled = totalDays <= 0; if(totalDays <= 0) btn.classList.add('opacity-50', 'cursor-not-allowed'); else btn.classList.remove('opacity-50', 'cursor-not-allowed'); }
-        function handleFileSelect(input) { const file = input.files[0]; if(!file) return document.getElementById('fileNameTxt').innerText = 'แนบเอกสาร (รูปภาพ)'; document.getElementById('fileNameTxt').innerText = "กำลังบีบอัดรูปภาพ..."; const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = event => { const img = new Image(); img.src = event.target.result; img.onload = () => { const canvas = document.createElement('canvas'); let width = img.width; let height = img.height; const MAX = 800; if (width > height) { if (width > MAX) { height *= MAX / width; width = MAX; } } else { if (height > MAX) { width *= MAX / height; height = MAX; } } canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); compressedBase64 = canvas.toDataURL('image/jpeg', 0.6); document.getElementById('fileNameTxt').innerText = "✅ " + file.name; } } }
+        function calculateLeave() { 
+            const startStr = document.getElementById('lvStart').value; const endStr = document.getElementById('lvEnd').value; const duration = document.getElementById('lvDuration').value; const btn = document.getElementById('btnSubmitLeave'); const resultTxt = document.getElementById('calcDays'); 
+            if(!startStr || !endStr || new Date(startStr) > new Date(endStr)) { resultTxt.innerText = "0"; btn.disabled = true; return; } 
+            if(startStr !== endStr && duration !== 'full') { Swal.fire('เตือน','ลาข้ามวันต้องเลือก "เต็มวัน" เท่านั้นครับ','info'); document.getElementById('lvDuration').value = 'full'; return calculateLeave(); } 
+            const restDaysArr = (getDecryptedUser().restDays || "0,6").split(',').map(Number); let totalDays = 0; let current = new Date(startStr); const end = new Date(endStr); 
+            while (current <= end) { if (!restDaysArr.includes(current.getDay())) totalDays += 1; current.setDate(current.getDate() + 1); } 
+            if (totalDays > 0 && duration !== 'full') totalDays = 0.5; resultTxt.innerText = totalDays; btn.disabled = totalDays <= 0; 
+            if(totalDays <= 0) btn.classList.add('opacity-50', 'cursor-not-allowed'); else btn.classList.remove('opacity-50', 'cursor-not-allowed'); 
+        }
+
+        function handleFileSelect(input) { 
+            const file = input.files[0]; if(!file) return document.getElementById('fileNameTxt').innerText = 'แนบเอกสาร (รูปภาพ)'; document.getElementById('fileNameTxt').innerText = "กำลังบีบอัดรูปภาพ..."; 
+            const reader = new FileReader(); reader.readAsDataURL(file); 
+            reader.onload = event => { const img = new Image(); img.src = event.target.result; img.onload = () => { const canvas = document.createElement('canvas'); let width = img.width; let height = img.height; const MAX = 800; if (width > height) { if (width > MAX) { height *= MAX / width; width = MAX; } } else { if (height > MAX) { width *= MAX / height; height = MAX; } } canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height); compressedBase64 = canvas.toDataURL('image/jpeg', 0.6); document.getElementById('fileNameTxt').innerText = "✅ " + file.name; } } 
+        }
 
         function handleLeaveSubmit(e) { 
             e.preventDefault(); const user = getDecryptedUser(); const calcDays = document.getElementById('calcDays').innerText;
