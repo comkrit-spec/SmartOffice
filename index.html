@@ -12,7 +12,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Prompt', sans-serif; }
-        .page-section { display: none; } .page-active { display: block; }
+        /* แก้บั๊กหน้าจอค้างด้วยการบังคับซ่อน/แสดง (!important) */
+        .page-section { display: none !important; } 
+        .page-active { display: block !important; }
+        #login-section.page-active { display: flex !important; }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 h-screen flex overflow-hidden text-gray-800 dark:text-gray-100 transition-colors duration-300">
@@ -136,7 +139,7 @@
     </main>
 
     <script>
-        // *** สำคัญ: เปลี่ยน URL เป็นของคุณ ***
+        // *** สำคัญที่สุด: เปลี่ยน URL เป็นของคุณ ***
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwKrcejEvAB64XWhd7ryOqvEgHBS4Czb3eDyMcyDTjobkjtRQeIVtrg8uQZIMc44Gun4A/exec"; 
 
         window.onload = () => {
@@ -148,28 +151,51 @@
 
         function toggleDarkMode() { document.documentElement.classList.toggle('dark'); localStorage.setItem('smartOfficeTheme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); }
         function toggleAuth() { document.getElementById('loginForm').classList.toggle('hidden'); document.getElementById('registerForm').classList.toggle('hidden'); }
-        function logout() { localStorage.removeItem('smartOfficeUser'); location.reload(); }
+        
+        function logout() { 
+            localStorage.removeItem('smartOfficeUser'); 
+            location.reload(); 
+        }
 
         function setupDashboard(user) {
+            // ถอดคลาส Active และบังคับซ่อนหน้าล็อกอินให้หายวับไปเลย
             document.getElementById('login-section').classList.remove('page-active');
-            document.getElementById('topName').innerText = user.name; document.getElementById('topRole').innerText = user.role;
+            document.getElementById('login-section').style.display = 'none';
+            
+            // ใส่ข้อมูลผู้ใช้
+            document.getElementById('topName').innerText = user.name; 
+            document.getElementById('topRole').innerText = user.role;
             document.getElementById('topAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff`;
             
+            // เปิดสิทธิ์เมนูตาม Role
             if(['Manager', 'HR', 'Admin'].includes(user.role)) document.getElementById('menu-approval').classList.remove('hidden');
-            if(user.role === 'Admin') { document.getElementById('menu-admin').classList.remove('hidden'); document.getElementById('adminSettingsZone').classList.remove('hidden'); }
+            if(user.role === 'Admin') { 
+                document.getElementById('menu-admin').classList.remove('hidden'); 
+                document.getElementById('adminSettingsZone').classList.remove('hidden'); 
+            }
+            // นำทางไปหน้า Dashboard
             navigate('dashboard');
         }
 
         function navigate(page) {
             document.querySelectorAll('.page-section').forEach(e => e.classList.remove('page-active'));
             document.getElementById(`page-${page}`).classList.add('page-active');
+            
             const user = JSON.parse(localStorage.getItem('smartOfficeUser'));
+            if(!user) return; // กัน Error ถ้ายังไม่ล็อกอิน
             
             if(['dashboard', 'leave', 'late'].includes(page)) loadMyHistory();
-            if(page === 'leave') { document.getElementById('lblVacation').innerText = user.leaveVacation; document.getElementById('lblPersonal').innerText = user.leavePersonal; }
+            if(page === 'leave') { 
+                document.getElementById('lblVacation').innerText = user.leaveVacation; 
+                document.getElementById('lblPersonal').innerText = user.leavePersonal; 
+            }
             if(page === 'profile') { 
-                document.getElementById('pfEmpId').value = user.empId; document.getElementById('pfName').value = user.name; document.getElementById('pfDept').value = user.department; 
-                document.getElementById('cardName').innerText = user.name; document.getElementById('cardEmpId').innerText = user.empId; document.getElementById('cardDept').innerText = user.department;
+                document.getElementById('pfEmpId').value = user.empId; 
+                document.getElementById('pfName').value = user.name; 
+                document.getElementById('pfDept').value = user.department; 
+                document.getElementById('cardName').innerText = user.name; 
+                document.getElementById('cardEmpId').innerText = user.empId; 
+                document.getElementById('cardDept').innerText = user.department;
                 document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${user.empId}`;
             }
             if(page === 'approval') loadPendingApprovals();
@@ -177,23 +203,31 @@
             if(page === 'admin') loadAdminUsers();
         }
 
+        // ฟังก์ชันโหลดข้อมูลหลัก (แก้ไขให้มี Loading หมุนๆ ตรงกลางจอ)
         async function req(data) {
-            Swal.showLoading();
-            const res = await fetch(data.action.startsWith('get') ? `${GAS_URL}?action=${data.action}${data.empId?'&empId='+data.empId:''}` : GAS_URL, data.action.startsWith('get') ? {} : { method: 'POST', body: JSON.stringify(data) });
-            return await res.json();
+            Swal.fire({ title: 'กำลังโหลด...', allowOutsideClick: false, showConfirmButton: false, didOpen: () => { Swal.showLoading(); } });
+            
+            try {
+                const res = await fetch(data.action.startsWith('get') ? `${GAS_URL}?action=${data.action}${data.empId?'&empId='+data.empId:''}` : GAS_URL, data.action.startsWith('get') ? {} : { method: 'POST', body: JSON.stringify(data) });
+                return await res.json();
+            } catch(error) {
+                Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+                throw error;
+            }
         }
 
-        const getBadge = (s) => s==='Approved'?'<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">อนุมัติ</span>':(s==='Rejected'?'<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">ไม่อนุมัติ</span>':'<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">รอตรวจ</span>');
+        const getBadge = (s) => s==='Approved'?'<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">อนุมัติ</span>':(s==='Rejected'?'<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ไม่อนุมัติ</span>':'<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-bold">รอตรวจ</span>');
 
         async function loadMyHistory() {
             const user = JSON.parse(localStorage.getItem('smartOfficeUser'));
-            const res = await req({ action: "getMyHistory", empId: user.empId }); Swal.close();
-            document.getElementById('listTodayLogs').innerHTML = res.todayLogs.map(l => `<li class="flex justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-xl border dark:border-gray-600"><div><b>${l.type}</b> <span class="text-xs ml-2">${l.time} น.</span></div><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">${l.status}</span></li>`).join('') || '<li class="text-center text-gray-400 py-2">ไม่มีลงเวลา</li>';
-            document.getElementById('tbMyLeaves').innerHTML = res.myLeaves.map(l => `<tr class="border-b dark:border-gray-700"><td class="p-3">${l.type}</td><td class="p-3">${l.date}</td><td class="p-3">${getBadge(l.status)}</td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center">ไม่มีประวัติ</td></tr>';
-            document.getElementById('tbMyLates').innerHTML = res.myLates.map(l => `<tr class="border-b dark:border-gray-700"><td class="p-3">${l.date}</td><td class="p-3 truncate max-w-[100px]">${l.reason}</td><td class="p-3">${getBadge(l.status)}</td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center">ไม่มีประวัติ</td></tr>';
+            const res = await req({ action: "getMyHistory", empId: user.empId }); 
+            Swal.close();
+            
+            document.getElementById('listTodayLogs').innerHTML = res.todayLogs.map(l => `<li class="flex justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-xl border dark:border-gray-600"><div><b>${l.type}</b> <span class="text-xs ml-2 text-gray-400">${l.time} น.</span></div><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-bold">${l.status}</span></li>`).join('') || '<li class="text-center text-gray-400 py-2">ยังไม่มีการลงเวลาในวันนี้</li>';
+            document.getElementById('tbMyLeaves').innerHTML = res.myLeaves.map(l => `<tr class="border-b dark:border-gray-700"><td class="p-3">${l.type}</td><td class="p-3">${l.date}</td><td class="p-3">${getBadge(l.status)}</td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center text-gray-400">ยังไม่มีประวัติการลา</td></tr>';
+            document.getElementById('tbMyLates').innerHTML = res.myLates.map(l => `<tr class="border-b dark:border-gray-700"><td class="p-3">${l.date}</td><td class="p-3 truncate max-w-[100px]">${l.reason}</td><td class="p-3">${getBadge(l.status)}</td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center text-gray-400">ยังไม่มีประวัติเข้าสาย</td></tr>';
         }
 
-        // --- แก้ไขตัดเรื่อง Notification ออกแล้ว ---
         async function handleLogin(e) { 
             e.preventDefault(); 
             const res = await req({ action: "login", empId: document.getElementById('empId').value, password: document.getElementById('password').value }); 
@@ -202,35 +236,35 @@
                 Swal.close(); 
                 setupDashboard(res.userData); 
             } else {
-                Swal.fire('Error', res.message, 'error'); 
+                Swal.fire('ข้อผิดพลาด', res.message, 'error'); 
             }
         }
         
-        async function handleRegister(e) { e.preventDefault(); const res = await req({ action: "register", empId: document.getElementById('regEmpId').value, name: document.getElementById('regName').value, department: document.getElementById('regDept').value, password: document.getElementById('regPassword').value }); Swal.fire(res.status==='success'?'สำเร็จ':'Error', res.message, res.status).then(()=>res.status==='success'&&toggleAuth()); }
+        async function handleRegister(e) { e.preventDefault(); const res = await req({ action: "register", empId: document.getElementById('regEmpId').value, name: document.getElementById('regName').value, department: document.getElementById('regDept').value, password: document.getElementById('regPassword').value }); Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status).then(()=>res.status==='success'&&toggleAuth()); }
         
         async function handleCheck(type) {
-            if(!navigator.geolocation) return Swal.fire('Error','GPS not supported','error');
-            Swal.fire({title:'จับพิกัด...', allowOutsideClick:false}); Swal.showLoading();
+            if(!navigator.geolocation) return Swal.fire('ข้อผิดพลาด','อุปกรณ์ของคุณไม่รองรับ GPS','error');
+            Swal.fire({title:'กำลังจับพิกัด...', allowOutsideClick:false, didOpen: () => { Swal.showLoading(); }}); 
             navigator.geolocation.getCurrentPosition(async (pos) => {
                 const res = await req({ action: "checkInOut", empId: JSON.parse(localStorage.getItem('smartOfficeUser')).empId, type: type, lat: pos.coords.latitude, lng: pos.coords.longitude });
                 Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status).then(loadMyHistory);
-            }, () => Swal.fire('Error','Please enable GPS','error'), {enableHighAccuracy: true});
+            }, () => Swal.fire('ข้อผิดพลาด','กรุณาเปิดอนุญาตการเข้าถึงตำแหน่งที่ตั้ง (GPS)','error'), {enableHighAccuracy: true});
         }
 
         async function handleLeaveSubmit(e) { e.preventDefault(); const user = JSON.parse(localStorage.getItem('smartOfficeUser')); const res = await req({ action: "submitLeave", empId: user.empId, leaveType: document.getElementById('lvType').value, startDate: document.getElementById('lvStart').value, endDate: document.getElementById('lvEnd').value, reason: document.getElementById('lvReason').value }); Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status); document.getElementById('lvType').parentElement.reset(); loadMyHistory(); }
         async function handleLateSubmit(e) { e.preventDefault(); const user = JSON.parse(localStorage.getItem('smartOfficeUser')); const res = await req({ action: "submitLate", empId: user.empId, date: document.getElementById('ltDate').value, reason: document.getElementById('ltReason').value }); Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status==='success'?'success':'warning'); document.getElementById('ltDate').parentElement.reset(); loadMyHistory(); }
-        async function handleProfileUpdate(e) { e.preventDefault(); const res = await req({ action: "updateProfile", empId: document.getElementById('pfEmpId').value, password: document.getElementById('pfPassword').value, name: document.getElementById('pfName').value, department: document.getElementById('pfDept').value }); if(res.status === 'success') { localStorage.setItem('smartOfficeUser', JSON.stringify(res.userData)); Swal.fire('สำเร็จ', res.message, 'success'); setupDashboard(res.userData); } else Swal.fire('Error', res.message, 'error'); }
+        async function handleProfileUpdate(e) { e.preventDefault(); const res = await req({ action: "updateProfile", empId: document.getElementById('pfEmpId').value, password: document.getElementById('pfPassword').value, name: document.getElementById('pfName').value, department: document.getElementById('pfDept').value }); if(res.status === 'success') { localStorage.setItem('smartOfficeUser', JSON.stringify(res.userData)); Swal.fire('สำเร็จ', res.message, 'success'); setupDashboard(res.userData); } else Swal.fire('ข้อผิดพลาด', res.message, 'error'); }
 
-        async function loadPendingApprovals() { const res = await req({ action: "getPendingApprovals" }); Swal.close(); document.getElementById('tbApproval').innerHTML = [...res.leaves, ...res.lates].map(i => `<tr class="border-b dark:border-gray-700"><td class="p-4">${i.empId}</td><td class="p-4"><span class="${i.type==='ขอเข้าสาย'?'bg-red-100 text-red-600':'bg-blue-100 text-blue-600'} px-2 py-1 rounded text-xs">${i.type}</span></td><td class="p-4">${i.date}</td><td class="p-4">${i.reason}</td><td class="p-4 text-center"><button onclick="approve('${i.sheetName}', ${i.row}, ${i.col}, 'Approved')" class="bg-green-500 text-white p-2 rounded mr-1"><i class="fa-solid fa-check"></i></button><button onclick="approve('${i.sheetName}', ${i.row}, ${i.col}, 'Rejected')" class="bg-red-500 text-white p-2 rounded"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('') || '<tr><td colspan="5" class="p-8 text-center text-green-500">ไม่มีรายการรออนุมัติ</td></tr>'; }
+        async function loadPendingApprovals() { const res = await req({ action: "getPendingApprovals" }); Swal.close(); document.getElementById('tbApproval').innerHTML = [...res.leaves, ...res.lates].map(i => `<tr class="border-b dark:border-gray-700"><td class="p-4 font-medium">${i.empId}</td><td class="p-4"><span class="${i.type==='ขอเข้าสาย'?'bg-red-100 text-red-600':'bg-blue-100 text-blue-600'} px-2 py-1 rounded text-xs font-bold">${i.type}</span></td><td class="p-4">${i.date}</td><td class="p-4">${i.reason}</td><td class="p-4 text-center"><button onclick="approve('${i.sheetName}', ${i.row}, ${i.col}, 'Approved')" class="bg-green-500 hover:bg-green-600 text-white p-2 rounded mr-1 transition"><i class="fa-solid fa-check"></i></button><button onclick="approve('${i.sheetName}', ${i.row}, ${i.col}, 'Rejected')" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('') || '<tr><td colspan="5" class="p-8 text-center text-green-500 font-bold">ไม่มีรายการรออนุมัติ</td></tr>'; }
         async function approve(s, r, c, st) { const res = await req({ action: "updateApproval", sheetName: s, row: r, col: c, status: st }); Swal.fire('สำเร็จ', res.message, 'success'); loadPendingApprovals(); }
 
-        async function loadNews() { const res = await req({ action: "getNewsAndHolidays" }); Swal.close(); document.getElementById('divNews').innerHTML = res.news.map(n => `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow border-l-4 border-indigo-500"><div class="flex justify-between mb-2"><h3 class="font-bold text-lg">${n.title}</h3><span class="text-xs text-indigo-500">${n.date}</span></div><p class="text-gray-600 dark:text-gray-300 mb-2">${n.content}</p><p class="text-xs text-gray-400">โดย: ${n.author}</p></div>`).join('') || '<p>ไม่มีข่าวสาร</p>'; document.getElementById('divHolidays').innerHTML = res.holidays.map(h => `<li class="flex items-center p-3 bg-red-50 dark:bg-red-900/30 rounded-xl"><div class="bg-white text-red-500 font-bold w-12 h-12 flex flex-col items-center justify-center rounded-lg shadow-sm"><span>${h.day}</span><span class="text-[10px]">${h.month}</span></div><div class="ml-3 text-sm font-bold">${h.title}</div></li>`).join('') || '<li>ไม่มีวันหยุด</li>'; }
-        async function loadAdminUsers() { const res = await req({ action: "getAllUsers" }); Swal.close(); document.getElementById('tbAdmin').innerHTML = res.users.map(u => `<tr class="border-b dark:border-gray-700"><td class="p-4">${u.empId}</td><td class="p-4">${u.name}</td><td class="p-4">${u.department}</td><td class="p-4">${u.role}</td><td class="p-4">${u.vacation}/${u.personal}</td><td class="p-4"><span class="${u.status==='Active'?'text-green-600':'text-yellow-600'} font-bold">${u.status}</span></td><td class="p-4 text-center">${u.status==='Pending'?`<button onclick="adminAct('${u.empId}','approve')" class="bg-green-500 text-white p-1 px-2 rounded text-xs mr-1">อนุมัติ</button>`:''}<button onclick="adminAct('${u.empId}','delete')" class="bg-red-500 text-white p-1 px-2 rounded text-xs"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
-        async function adminAct(id, act) { if(!confirm('ยืนยันดำเนินการ?')) return; const res = await req({ action: "adminManageUser", targetEmpId: id, subAction: act }); Swal.fire('สำเร็จ', res.message, 'success'); loadAdminUsers(); }
+        async function loadNews() { const res = await req({ action: "getNewsAndHolidays" }); Swal.close(); document.getElementById('divNews').innerHTML = res.news.map(n => `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow border-l-4 border-indigo-500 transition hover:shadow-md"><div class="flex justify-between mb-2"><h3 class="font-bold text-lg">${n.title}</h3><span class="text-xs text-indigo-500 font-bold">${n.date}</span></div><p class="text-gray-600 dark:text-gray-300 mb-2">${n.content}</p><p class="text-xs text-gray-400">ประกาศโดย: ${n.author}</p></div>`).join('') || '<p class="text-gray-500">ไม่มีข่าวสารประกาศ</p>'; document.getElementById('divHolidays').innerHTML = res.holidays.map(h => `<li class="flex items-center p-3 bg-red-50 dark:bg-red-900/30 rounded-xl"><div class="bg-white text-red-500 font-bold w-12 h-12 flex flex-col items-center justify-center rounded-lg shadow-sm"><span>${h.day}</span><span class="text-[10px]">${h.month}</span></div><div class="ml-3 text-sm font-bold text-gray-800 dark:text-gray-200">${h.title}</div></li>`).join('') || '<li>ไม่มีวันหยุด</li>'; }
+        async function loadAdminUsers() { const res = await req({ action: "getAllUsers" }); Swal.close(); document.getElementById('tbAdmin').innerHTML = res.users.map(u => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition"><td class="p-4 font-medium">${u.empId}</td><td class="p-4">${u.name}</td><td class="p-4">${u.department}</td><td class="p-4">${u.role}</td><td class="p-4 font-bold text-center">${u.vacation}/${u.personal}</td><td class="p-4"><span class="${u.status==='Active'?'text-green-600':'text-yellow-600'} font-bold">${u.status}</span></td><td class="p-4 text-center">${u.status==='Pending'?`<button onclick="adminAct('${u.empId}','approve')" class="bg-green-500 hover:bg-green-600 text-white p-1 px-3 rounded text-xs mr-1 font-bold">อนุมัติ</button>`:''}<button onclick="adminAct('${u.empId}','delete')" class="bg-red-500 hover:bg-red-600 text-white p-1 px-3 rounded text-xs transition"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
+        async function adminAct(id, act) { if(!confirm('ยืนยันดำเนินการกับพนักงานรหัส: ' + id + '?')) return; const res = await req({ action: "adminManageUser", targetEmpId: id, subAction: act }); Swal.fire('สำเร็จ', res.message, 'success'); loadAdminUsers(); }
 
-        async function handleGeofenceUpdate(e) { e.preventDefault(); const res = await req({ action: "updateGeofence", lat: document.getElementById('setLat').value, lng: document.getElementById('setLng').value, radius: document.getElementById('setRadius').value }); Swal.fire(res.status==='success'?'สำเร็จ':'Error', res.message, res.status); }
-        async function handleAddNews(e) { e.preventDefault(); const res = await req({ action: "addNews", date: document.getElementById('newsDate').value, title: document.getElementById('newsTitle').value, content: document.getElementById('newsContent').value, author: JSON.parse(localStorage.getItem('smartOfficeUser')).name }); Swal.fire(res.status==='success'?'สำเร็จ':'Error', res.message, res.status); if(res.status==='success') e.target.reset(); }
-        async function handleResetLeaves() { if(confirm('ยืนยันการคืนโควต้าให้พนักงานทุกคน?')) { const res = await req({ action: "resetYearlyLeaves" }); Swal.fire('สำเร็จ', res.message, 'success'); } }
+        async function handleGeofenceUpdate(e) { e.preventDefault(); const res = await req({ action: "updateGeofence", lat: document.getElementById('setLat').value, lng: document.getElementById('setLng').value, radius: document.getElementById('setRadius').value }); Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status); }
+        async function handleAddNews(e) { e.preventDefault(); const res = await req({ action: "addNews", date: document.getElementById('newsDate').value, title: document.getElementById('newsTitle').value, content: document.getElementById('newsContent').value, author: JSON.parse(localStorage.getItem('smartOfficeUser')).name }); Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status); if(res.status==='success') e.target.reset(); }
+        async function handleResetLeaves() { if(confirm('อันตราย! ยืนยันการคืนโควต้าวันลาให้พนักงานทุกคนกลับเป็นค่าเริ่มต้น?')) { const res = await req({ action: "resetYearlyLeaves" }); Swal.fire('สำเร็จ', res.message, 'success'); } }
 
         function exportTableToCSV(filename) { let csv = []; document.querySelectorAll("#page-admin table tr").forEach(row => { let cols = row.querySelectorAll("td, th"); let rowData = []; for (let j=0; j<cols.length-1; j++) rowData.push('"' + cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "") + '"'); csv.push(rowData.join(",")); }); const link = document.createElement("a"); link.href = window.URL.createObjectURL(new Blob(["\ufeff" + csv.join("\n")], {type: "text/csv;charset=utf-8;"})); link.download = filename; link.click(); }
     </script>
