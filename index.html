@@ -228,7 +228,7 @@
 
     <script>
         // *** สำคัญที่สุด: ใส่ลิงก์ GAS ของคุณที่นี่ ***
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzyIBltAQfYHddWcZoNug4kKWJeFxZzwxHpg41tIlEG/dev"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbww3CmIQqzwswMFovEqDVbijSqKviTcLp2xdxlY-HaECrQiW5kTd4q1CVONg8NHnWzO6g/exec"; 
 
         const setEncryptedUser = (user) => localStorage.setItem('secureHQUser', btoa(encodeURIComponent(JSON.stringify(user))));
         const getDecryptedUser = () => { try { return JSON.parse(decodeURIComponent(atob(localStorage.getItem('secureHQUser')))); } catch(e) { return null; } };
