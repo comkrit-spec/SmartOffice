@@ -8,8 +8,6 @@
     <script>tailwind.config = { darkMode: 'class' }</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js"></script>
     <link rel="manifest" href="manifest.json">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
@@ -139,23 +137,7 @@
 
     <script>
         // *** สำคัญ: เปลี่ยน URL เป็นของคุณ ***
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwFZaUstDTGzx2SLqh79mYT40roS-sehxEmiHO9a0a1tE3SFYLdWwYmhNn3FCLp7f95zQ/exec"; 
-        
-        const firebaseConfig = { apiKey: "AIzaSyA898_Q3mtKBETkUwY-v-wrIpDQ6LUafvg", authDomain: "smartofficeapp-32e0a.firebaseapp.com", projectId: "smartofficeapp-32e0a", storageBucket: "smartofficeapp-32e0a.firebasestorage.app", messagingSenderId: "412226486577", appId: "1:412226486577:web:212028f120d1d940157010" };
-        const VAPID_KEY = "BE30uQtKhXTKAHEcAdUfpIUhwz0wiwyAX-Ea5yXEM7CPB0SdZiYHzxZfqqeea1gLN7GgGlEn4i0nTwoKE7Zwj08";
-
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const messaging = firebase.messaging();
-        messaging.onMessage((payload) => Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: payload.notification.title, text: payload.notification.body, showConfirmButton: false, timer: 5000 }));
-
-        async function initNotifications(empId) {
-            try {
-                if(await Notification.requestPermission() === 'granted') {
-                    const token = await messaging.getToken({ vapidKey: VAPID_KEY });
-                    if(token) fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "saveFcmToken", empId: empId, token: token }) });
-                }
-            } catch(e) {}
-        }
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwKrcejEvAB64XWhd7ryOqvEgHBS4Czb3eDyMcyDTjobkjtRQeIVtrg8uQZIMc44Gun4A/exec"; 
 
         window.onload = () => {
             if(localStorage.getItem('smartOfficeTheme') === 'dark') document.documentElement.classList.add('dark');
@@ -211,7 +193,19 @@
             document.getElementById('tbMyLates').innerHTML = res.myLates.map(l => `<tr class="border-b dark:border-gray-700"><td class="p-3">${l.date}</td><td class="p-3 truncate max-w-[100px]">${l.reason}</td><td class="p-3">${getBadge(l.status)}</td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center">ไม่มีประวัติ</td></tr>';
         }
 
-        async function handleLogin(e) { e.preventDefault(); const res = await req({ action: "login", empId: document.getElementById('empId').value, password: document.getElementById('password').value }); if(res.status === 'success') { localStorage.setItem('smartOfficeUser', JSON.stringify(res.userData)); Swal.close(); setupDashboard(res.userData); initNotifications(res.userData.empId); } else Swal.fire('Error', res.message, 'error'); }
+        // --- แก้ไขตัดเรื่อง Notification ออกแล้ว ---
+        async function handleLogin(e) { 
+            e.preventDefault(); 
+            const res = await req({ action: "login", empId: document.getElementById('empId').value, password: document.getElementById('password').value }); 
+            if(res.status === 'success') { 
+                localStorage.setItem('smartOfficeUser', JSON.stringify(res.userData)); 
+                Swal.close(); 
+                setupDashboard(res.userData); 
+            } else {
+                Swal.fire('Error', res.message, 'error'); 
+            }
+        }
+        
         async function handleRegister(e) { e.preventDefault(); const res = await req({ action: "register", empId: document.getElementById('regEmpId').value, name: document.getElementById('regName').value, department: document.getElementById('regDept').value, password: document.getElementById('regPassword').value }); Swal.fire(res.status==='success'?'สำเร็จ':'Error', res.message, res.status).then(()=>res.status==='success'&&toggleAuth()); }
         
         async function handleCheck(type) {
