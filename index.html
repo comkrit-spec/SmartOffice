@@ -59,7 +59,6 @@
     </div>
 
     <main class="flex-1 flex flex-col h-screen overflow-y-auto pb-24 md:pb-0 relative w-full">
-        
         <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-40 px-6 py-4 flex justify-between items-center border-b border-slate-200 shadow-sm">
             <div class="flex items-center gap-6">
                 <div class="font-bold text-xl text-indigo-700 flex items-center gap-2 cursor-pointer" onclick="navigate('dashboard')"><i class="fa-solid fa-layer-group"></i> SmartHQ</div>
@@ -92,46 +91,26 @@
         <div class="p-4 md:p-8 max-w-5xl mx-auto w-full">
             
             <section id="page-dashboard" class="page-section">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800" id="greetText">สวัสดี, <span id="dashName">คุณ</span></h2>
-                        <p class="text-sm text-slate-500" id="dashDate">กำลังโหลด...</p>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div class="flex items-center gap-4 w-full md:w-auto">
+                        <div class="hidden sm:flex bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl p-3 items-center gap-3 shadow-sm min-w-[110px]"><span class="text-3xl drop-shadow-sm" id="wIcon">⛅</span><div><p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-0.5"><i class="fa-solid fa-location-dot mr-1"></i>มาบข่า</p><p class="text-lg font-extrabold text-slate-700 leading-none"><span id="wTemp">--</span><span class="text-sm text-slate-400">°</span></p></div></div>
+                        <div><h2 class="text-2xl font-bold text-slate-800" id="greetText">สวัสดี, <span id="dashName">คุณ...</span></h2><p class="text-sm font-medium text-slate-500 mt-1" id="dashAlertText">กำลังโหลดข้อมูล...</p></div>
                     </div>
-                    <div class="flex bg-white rounded-2xl p-1.5 shadow-sm border border-slate-100 w-full md:w-auto">
+                    <div class="flex bg-white rounded-2xl p-1.5 shadow-sm border border-slate-100 w-full md:w-auto mt-2 md:mt-0">
                         <button onclick="handleCheck('Check-In')" class="flex-1 md:w-32 py-2.5 rounded-xl bg-indigo-50 text-indigo-600 font-bold text-sm hover:bg-indigo-100 transition-colors"><i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้างาน</button>
                         <button onclick="handleCheck('Check-Out')" class="flex-1 md:w-32 py-2.5 rounded-xl text-slate-500 font-bold text-sm hover:bg-slate-100 transition-colors ml-1"><i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> ออกงาน</button>
                     </div>
                 </div>
-
                 <div id="alertZone" class="mb-6 space-y-3"></div>
-
                 <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">สรุปข้อมูลของฉัน</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
-                        <i class="fa-solid fa-umbrella-beach absolute -right-4 -bottom-4 text-6xl opacity-10"></i>
-                        <p class="text-indigo-100 text-xs font-semibold mb-1">พักร้อนคงเหลือ</p>
-                        <h4 class="text-3xl font-extrabold"><span id="sumVacation">0</span> <span class="text-sm font-medium">วัน</span></h4>
-                    </div>
-                    <div class="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
-                        <i class="fa-solid fa-briefcase-medical absolute -right-4 -bottom-4 text-6xl opacity-10"></i>
-                        <p class="text-emerald-100 text-xs font-semibold mb-1">ลากิจคงเหลือ</p>
-                        <h4 class="text-3xl font-extrabold"><span id="sumPersonal">0</span> <span class="text-sm font-medium">วัน</span></h4>
-                    </div>
-                    <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm">
-                        <p class="text-slate-400 text-xs font-semibold mb-1">เข้าสายเดือนนี้</p>
-                        <h4 class="text-3xl font-extrabold text-amber-500"><span id="sumLate">0</span> <span class="text-sm font-medium">ครั้ง</span></h4>
-                    </div>
-                    <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm">
-                        <p class="text-slate-400 text-xs font-semibold mb-1">เวลาปัจจุบัน</p>
-                        <h4 class="text-3xl font-extrabold text-slate-700" id="currentTime">00:00</h4>
-                    </div>
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-3xl p-5 text-white shadow-md relative overflow-hidden"><i class="fa-solid fa-umbrella-beach absolute -right-4 -bottom-4 text-6xl opacity-10"></i><p class="text-indigo-100 text-xs font-semibold mb-1">พักร้อนคงเหลือ</p><h4 class="text-3xl font-extrabold"><span id="sumVacation">0</span> <span class="text-sm font-medium">วัน</span></h4></div>
+                    <div class="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-3xl p-5 text-white shadow-md relative overflow-hidden"><i class="fa-solid fa-briefcase-medical absolute -right-4 -bottom-4 text-6xl opacity-10"></i><p class="text-emerald-100 text-xs font-semibold mb-1">ลากิจคงเหลือ</p><h4 class="text-3xl font-extrabold"><span id="sumPersonal">0</span> <span class="text-sm font-medium">วัน</span></h4></div>
+                    <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm"><p class="text-slate-400 text-xs font-semibold mb-1">เข้าสายเดือนนี้</p><h4 class="text-3xl font-extrabold text-amber-500"><span id="sumLate">0</span> <span class="text-sm font-medium">ครั้ง</span></h4></div>
+                    <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm"><p class="text-slate-400 text-xs font-semibold mb-1">เวลาปัจจุบัน</p><h4 class="text-3xl font-extrabold text-slate-700" id="currentTime">00:00</h4></div>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                        <h3 class="font-bold text-slate-800 mb-4 flex items-center"><i class="fa-regular fa-clock text-indigo-500 mr-2 text-lg"></i> บันทึกเวลาวันนี้</h3>
-                        <ul id="listTodayLogs" class="space-y-3"></ul>
-                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-800 mb-4 flex items-center"><i class="fa-regular fa-clock text-indigo-500 mr-2 text-lg"></i> บันทึกเวลาวันนี้</h3><ul id="listTodayLogs" class="space-y-3"></ul></div>
                     <div class="space-y-6">
                         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold mb-4 text-red-500 flex items-center"><i class="fa-regular fa-calendar-star mr-2"></i> วันหยุดบริษัท</h3><ul id="divHolidays" class="space-y-3"></ul></div>
                         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold mb-4 text-blue-500 flex items-center"><i class="fa-regular fa-bell mr-2"></i> ข่าวสาร</h3><ul id="divNews" class="space-y-3"></ul></div>
@@ -143,28 +122,23 @@
 
             <section id="page-leave" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-regular fa-paper-plane text-indigo-600 mr-2"></i> ส่งคำขอลาพัก</h2>
-                <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-6 flex justify-around items-center"><div class="w-32 h-32"><canvas id="vacationChart"></canvas></div><div class="w-32 h-32"><canvas id="personalChart"></canvas></div></div>
+                <form id="leaveForm" onsubmit="handleLeaveSubmit(event)" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 mb-6">
                     <div class="mb-5"><label class="text-sm font-medium text-slate-600 mb-2 block">ประเภทการลา</label><select id="lvType" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"><option value="">-- เลือกประเภท --</option><option value="ลาพักร้อน">ลาพักร้อน</option><option value="ลากิจ">ลากิจ</option><option value="ลาป่วย">ลาป่วย</option><option value="ลาไม่รับค่าจ้าง">ลาไม่รับค่าจ้าง</option><option value="ลาอื่นๆ">ลาอื่นๆ</option></select></div>
-                    <div class="grid grid-cols-2 gap-4 mb-5">
-                        <div><label class="text-sm font-medium text-slate-600 mb-2 block">วันที่เริ่ม</label><input type="date" id="lvStart" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div>
-                        <div><label class="text-sm font-medium text-slate-600 mb-2 block">ถึงวันที่</label><input type="date" id="lvEnd" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div>
-                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-5"><div><label class="text-sm font-medium text-slate-600 mb-2 block">วันที่เริ่ม</label><input type="date" id="lvStart" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div><div><label class="text-sm font-medium text-slate-600 mb-2 block">ถึงวันที่</label><input type="date" id="lvEnd" onchange="calculateLeave()" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"></div></div>
                     <div class="mb-5"><label class="text-sm font-medium text-slate-600 mb-2 block">ช่วงเวลา</label><select id="lvDuration" onchange="calculateLeave()" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl"><option value="full">เต็มวัน (Full Day)</option><option value="morning">ครึ่งวันเช้า</option><option value="afternoon">ครึ่งวันบ่าย</option></select></div>
                     <div class="mb-6 bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex justify-between items-center"><span class="text-sm font-medium text-emerald-700">สรุปจำนวนวันลา</span><span class="text-2xl font-bold text-emerald-600"><span id="calcDays">0</span> วัน</span></div>
                     <textarea id="lvReason" required placeholder="เหตุผลการลา..." rows="2" class="w-full mb-6 p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                     <div class="mb-8 relative overflow-hidden bg-slate-50 border-2 border-dashed border-slate-300 p-6 rounded-xl text-center hover:bg-slate-100 transition-colors"><input type="file" id="lvFile" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleFileSelect(this)"><i class="fa-regular fa-image text-3xl text-slate-400 mb-2"></i><p id="fileNameTxt" class="text-sm font-medium text-slate-600">แนบเอกสาร (รูปภาพ)</p></div>
                     <button type="submit" id="btnSubmitLeave" class="w-full bg-indigo-600 text-white font-semibold py-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-md">ส่งคำขอลา</button>
                 </form>
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden"><div class="p-5 bg-slate-50 border-b border-slate-100"><h3 class="font-semibold text-slate-800">ประวัติของฉัน (ยกเลิกได้ถ้ารอตรวจ)</h3></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-100"><tr><th class="p-4 font-medium text-slate-500">ประเภท</th><th class="p-4 font-medium text-slate-500">วันที่</th><th class="p-4 font-medium text-slate-500 text-center">สถานะ</th></tr></thead><tbody id="tbMyLeaves"></tbody></table></div></div>
             </section>
             
             <section id="page-late" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-clock text-amber-500 mr-2"></i> ขอเข้าสาย</h2>
-                <form onsubmit="handleLateSubmit(event)" class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-6">
-                    <input type="date" id="ltDate" required class="w-full mb-4 p-4 bg-slate-50 border rounded-xl">
-                    <textarea id="ltReason" required placeholder="เหตุผลที่เข้าสาย" rows="2" class="w-full mb-4 p-4 bg-slate-50 border rounded-xl"></textarea>
-                    <button type="submit" class="w-full bg-amber-500 text-white font-bold py-4 rounded-xl hover:bg-amber-600">ยื่นคำขอเข้าสาย</button>
-                </form>
-                <div class="bg-white rounded-3xl shadow-sm border overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-50"><tr><th class="p-4">วันที่</th><th class="p-4">เหตุผล</th><th class="p-4">สถานะ</th></tr></thead><tbody id="tbMyLates"></tbody></table></div>
+                <form onsubmit="handleLateSubmit(event)" class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-6"><input type="date" id="ltDate" required class="w-full mb-4 p-4 bg-slate-50 border rounded-xl"><textarea id="ltReason" required placeholder="เหตุผลที่เข้าสาย" rows="2" class="w-full mb-4 p-4 bg-slate-50 border rounded-xl"></textarea><button type="submit" class="w-full bg-amber-500 text-white font-bold py-4 rounded-xl hover:bg-amber-600">ยื่นคำขอเข้าสาย</button></form>
+                <div class="bg-white rounded-3xl shadow-sm border overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-50"><tr><th class="p-4">วันที่</th><th class="p-4">เหตุผล</th><th class="p-4 text-center">สถานะ</th></tr></thead><tbody id="tbMyLates"></tbody></table></div>
             </section>
 
             <section id="page-approval" class="page-section">
@@ -174,15 +148,8 @@
 
             <section id="page-executive" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-chart-pie text-purple-600 mr-2"></i> รายงานสถิติผู้บริหาร</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-700 mb-4 text-center">วันลาสะสม (รายแผนก)</h3><canvas id="chartDeptLeaves"></canvas></div>
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-700 mb-4 text-center">เข้าสายสะสม (รายแผนก)</h3><canvas id="chartDeptLates"></canvas></div>
-                </div>
-                <div class="bg-purple-50 p-8 rounded-3xl border border-purple-100 shadow-sm">
-                    <h3 class="font-bold text-purple-800 mb-4 text-lg"><i class="fa-solid fa-file-excel mr-2"></i> Export สรุปข้อมูล (Payroll)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"><div><label class="text-sm text-purple-700 mb-2 block">ตั้งแต่วันที่</label><input type="date" id="repStart" class="w-full p-4 bg-white border border-purple-200 rounded-xl"></div><div><label class="text-sm text-purple-700 mb-2 block">ถึงวันที่</label><input type="date" id="repEnd" class="w-full p-4 bg-white border border-purple-200 rounded-xl"></div></div>
-                    <button onclick="exportPayrollReport()" class="w-full bg-purple-600 text-white font-bold py-4 rounded-xl hover:bg-purple-700 active:scale-[0.98] transition-all shadow-md"><i class="fa-solid fa-download mr-2"></i> ดาวน์โหลด Excel (CSV)</button>
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-700 mb-4 text-center">วันลาสะสม (รายแผนก)</h3><canvas id="chartDeptLeaves"></canvas></div><div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100"><h3 class="font-bold text-slate-700 mb-4 text-center">เข้าสายสะสม (รายแผนก)</h3><canvas id="chartDeptLates"></canvas></div></div>
+                <div class="bg-purple-50 p-8 rounded-3xl border border-purple-100 shadow-sm"><h3 class="font-bold text-purple-800 mb-4 text-lg"><i class="fa-solid fa-file-excel mr-2"></i> Export สรุปข้อมูล (Payroll)</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"><div><label class="text-sm text-purple-700 mb-2 block">ตั้งแต่วันที่</label><input type="date" id="repStart" class="w-full p-4 bg-white border border-purple-200 rounded-xl"></div><div><label class="text-sm text-purple-700 mb-2 block">ถึงวันที่</label><input type="date" id="repEnd" class="w-full p-4 bg-white border border-purple-200 rounded-xl"></div></div><button onclick="exportPayrollReport()" class="w-full bg-purple-600 text-white font-bold py-4 rounded-xl hover:bg-purple-700 active:scale-[0.98] transition-all shadow-md"><i class="fa-solid fa-download mr-2"></i> ดาวน์โหลด Excel</button></div>
             </section>
 
             <section id="page-profile" class="page-section">
@@ -191,28 +158,21 @@
                 <form onsubmit="handleProfileUpdate(event)" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5"><div><label class="text-xs font-medium text-slate-500 mb-2 block">รหัสพนักงาน</label><input type="text" id="pfEmpId" readonly class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"></div><div><label class="text-xs font-medium text-slate-500 mb-2 block">ชื่อ-นามสกุล</label><input type="text" id="pfName" required class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6"><div><label class="text-xs font-medium text-slate-500 mb-2 block">แผนก</label><input type="text" id="pfDept" required class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div><div><label class="text-xs font-medium text-slate-500 mb-2 block">เปลี่ยนรหัสผ่าน</label><input type="password" id="pfPassword" placeholder="(ปล่อยว่างถ้าไม่เปลี่ยน)" class="w-full p-4 bg-white border border-slate-200 rounded-xl"></div></div>
-                    <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-4 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all">บันทึกข้อมูล</button>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-4 rounded-xl hover:bg-indigo-700">บันทึกข้อมูล</button>
                 </form>
             </section>
             
             <section id="page-settings" class="page-section">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800"><i class="fa-solid fa-gear text-indigo-600 mr-2"></i> ตั้งค่าระบบและแอดมิน</h2>
                 
-                <div class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100 mb-6">
-                    <h3 class="font-bold text-indigo-800 mb-4"><i class="fa-solid fa-map-location-dot mr-2"></i> พิกัดสาขา (Geofencing)</h3>
-                    <div class="bg-white rounded-xl overflow-hidden border mb-4"><table class="w-full text-sm text-left"><thead class="bg-slate-50"><tr><th class="p-3">Lat, Lng</th><th class="p-3">รัศมี (ม.)</th><th class="p-3 text-center">ลบ</th></tr></thead><tbody id="tbGeofence"></tbody></table></div>
-                    <form onsubmit="handleAddGeofence(event)" class="flex gap-2">
-                        <input type="text" id="gLat" placeholder="Latitude" required class="flex-1 p-3 rounded-lg border text-sm"><input type="text" id="gLng" placeholder="Longitude" required class="flex-1 p-3 rounded-lg border text-sm"><input type="number" id="gRad" placeholder="รัศมี" required class="w-20 p-3 rounded-lg border text-sm">
-                        <button type="submit" class="bg-indigo-600 text-white px-4 rounded-lg font-bold hover:bg-indigo-700">+</button>
-                    </form>
-                </div>
+                <div class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100 mb-6"><h3 class="font-bold text-indigo-800 mb-4"><i class="fa-solid fa-map-location-dot mr-2"></i> พิกัดสาขา</h3><div class="bg-white rounded-xl overflow-hidden border mb-4"><table class="w-full text-sm text-left"><thead class="bg-slate-50"><tr><th class="p-3">Lat, Lng</th><th class="p-3">รัศมี (ม.)</th><th class="p-3 text-center">ลบ</th></tr></thead><tbody id="tbGeofence"></tbody></table></div><form onsubmit="handleAddGeofence(event)" class="flex gap-2"><input type="text" id="gLat" placeholder="Lat" required class="flex-1 p-3 rounded-lg border text-sm"><input type="text" id="gLng" placeholder="Lng" required class="flex-1 p-3 rounded-lg border text-sm"><input type="number" id="gRad" placeholder="รัศมี" required class="w-20 p-3 rounded-lg border text-sm"><button type="submit" class="bg-indigo-600 text-white px-4 rounded-lg font-bold">+</button></form></div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><h3 class="font-bold text-slate-800 mb-4">ประกาศข่าวสาร</h3><form onsubmit="handleAddNews(event)"><input type="date" id="nDate" required class="w-full mb-3 p-3 border rounded-xl"><input type="text" id="nTitle" placeholder="หัวข้อ" required class="w-full mb-3 p-3 border rounded-xl"><textarea id="nContent" placeholder="รายละเอียด..." required class="w-full mb-3 p-3 border rounded-xl"></textarea><button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 rounded-xl">ประกาศ</button></form></div>
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><h3 class="font-bold text-slate-800 mb-4">ตั้งค่าอื่นๆ</h3><div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl mb-4"><p class="font-bold text-sm">โหมดกลางคืน (Dark Mode)</p><button onclick="toggleDarkMode()" class="text-xl text-indigo-500"><i class="fa-solid fa-moon"></i></button></div><div class="p-4 bg-red-50 rounded-xl border border-red-100 text-center"><p class="text-xs text-red-600 mb-2 font-bold">รีเซ็ตวันลาพักร้อน/ลากิจ ของทุกคนกลับเป็นค่าเริ่มต้น</p><button onclick="handleResetLeaves()" class="bg-red-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-red-600">รีเซ็ตโควต้า</button></div></div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><h3 class="font-bold text-slate-800 mb-4 text-red-500">ตั้งค่าวันหยุดบริษัท</h3><form onsubmit="req({action:'addHoliday', date:document.getElementById('hDate').value, title:document.getElementById('hTitle').value}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})" class="flex gap-2 mb-4"><input type="date" id="hDate" required class="w-full p-2 border rounded-lg text-sm"><input type="text" id="hTitle" placeholder="ชื่อวันหยุด" required class="w-full p-2 border rounded-lg text-sm"><button type="submit" class="bg-red-500 text-white px-3 rounded-lg">+</button></form><ul id="listSettingHolidays" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul></div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><h3 class="font-bold text-slate-800 mb-4 text-blue-500">จัดการข่าวสาร</h3><form onsubmit="req({action:'addNews', date:document.getElementById('nDate').value, title:document.getElementById('nTitle').value, content:document.getElementById('nContent').value, author:getDecryptedUser().name}, true).then(r=>{Toast.fire({icon:'success',title:r.message}); loadSettings(); e.target.reset();})"><input type="date" id="nDate" required class="w-full mb-2 p-2 border rounded-lg text-sm"><input type="text" id="nTitle" placeholder="หัวข้อ" required class="w-full mb-2 p-2 border rounded-lg text-sm"><textarea id="nContent" placeholder="รายละเอียด..." required class="w-full mb-2 p-2 border rounded-lg text-sm"></textarea><button type="submit" class="w-full bg-blue-500 text-white font-bold py-2 rounded-lg text-sm mb-4">เพิ่มประกาศ</button></form><ul id="listSettingNews" class="space-y-2 text-sm max-h-40 overflow-y-auto"></ul></div>
                 </div>
 
-                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mb-6"><div class="p-5 bg-slate-50 border-b border-slate-100 flex justify-between items-center"><h3 class="font-semibold text-slate-800">จัดการพนักงาน</h3><button onclick="exportTableToCSV('พนักงาน_SmartHQ.csv')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-colors"><i class="fa-solid fa-file-csv mr-2"></i>Export</button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-100"><tr><th class="p-4 font-medium text-slate-500">ID</th><th class="p-4 font-medium text-slate-500">ชื่อ</th><th class="p-4 font-medium text-slate-500">สิทธิ์</th><th class="p-4 font-medium text-slate-500">วันหยุด</th><th class="p-4 font-medium text-slate-500">สถานะ</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbAdmin"></tbody></table></div></div>
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mb-6"><div class="p-5 bg-slate-50 border-b border-slate-100 flex justify-between items-center"><h3 class="font-semibold text-slate-800">จัดการพนักงาน</h3><button onclick="exportTableToCSV('พนักงาน_SmartHQ.csv')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-colors"><i class="fa-solid fa-file-csv mr-2"></i>Export</button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white border-b border-slate-100"><tr><th class="p-4 font-medium text-slate-500">ID</th><th class="p-4 font-medium text-slate-500">ชื่อ</th><th class="p-4 font-medium text-slate-500">สิทธิ์</th><th class="p-4 font-medium text-slate-500">หัวหน้างาน</th><th class="p-4 font-medium text-slate-500 text-center">โควต้า</th><th class="p-4 font-medium text-slate-500">สถานะ</th><th class="p-4 font-medium text-slate-500 text-center">จัดการ</th></tr></thead><tbody id="tbAdmin"></tbody></table></div></div>
             </section>
 
         </div>
@@ -228,7 +188,7 @@
 
     <script>
         // *** สำคัญที่สุด: ใส่ลิงก์ GAS ของคุณที่นี่ ***
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbww3CmIQqzwswMFovEqDVbijSqKviTcLp2xdxlY-HaECrQiW5kTd4q1CVONg8NHnWzO6g/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzhm8RBGlPnm1u4DnRIQ1LQU-23xTBxmrBuXy1H1mgcd3xpgQ-lRZ49_E7pHLEjT2Zc9A/exec"; 
 
         const setEncryptedUser = (user) => localStorage.setItem('secureHQUser', btoa(encodeURIComponent(JSON.stringify(user))));
         const getDecryptedUser = () => { try { return JSON.parse(decodeURIComponent(atob(localStorage.getItem('secureHQUser')))); } catch(e) { return null; } };
@@ -247,11 +207,29 @@
             document.getElementById('lvStart').value = today.toISOString().split('T')[0]; document.getElementById('lvEnd').value = today.toISOString().split('T')[0];
             document.getElementById('ltDate').value = today.toISOString().split('T')[0];
             
-            let startD = new Date(today.getFullYear(), today.getMonth() - 1, 26);
-            let endD = new Date(today.getFullYear(), today.getMonth(), 25);
+            let startD = new Date(today.getFullYear(), today.getMonth() - 1, 26); let endD = new Date(today.getFullYear(), today.getMonth(), 25);
             const adjustTz = (d) => new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
             document.getElementById('repStart').value = adjustTz(startD); document.getElementById('repEnd').value = adjustTz(endD);
         };
+
+        // === ⛅ ฟังก์ชันเช็กสภาพอากาศจากมาบข่า ระยอง ===
+        async function fetchWeather(userName) {
+            try {
+                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=12.78&longitude=101.18&current_weather=true");
+                const data = await res.json();
+                const wCode = data.current_weather.weathercode; const temp = Math.round(data.current_weather.temperature);
+                
+                let wIcon = "☀️"; let wMsg = "อากาศแจ่มใส ลุยงานให้เต็มที่เลยครับ"; 
+                if (wCode >= 1 && wCode <= 3) { wIcon = "⛅"; wMsg = "อากาศกำลังดี ขอให้เป็นวันที่ยอดเยี่ยมครับ"; }
+                else if (wCode >= 45 && wCode <= 48) { wIcon = "🌫️"; wMsg = "มีหมอกลง ขับขี่ด้วยความระมัดระวังนะครับ"; }
+                else if (wCode >= 51 && wCode <= 65 || wCode >= 80 && wCode <= 82) { wIcon = "🌧️"; wMsg = "ฝนตก อย่าลืมพกร่มและดูแลสุขภาพด้วยครับ"; }
+                else if (wCode >= 95 && wCode <= 99) { wIcon = "⛈️"; wMsg = "ฝนฟ้าคะนองรุนแรง ระมัดระวังการเดินทางเป็นพิเศษครับ"; }
+
+                document.getElementById('wIcon').innerText = wIcon; document.getElementById('wTemp').innerText = temp;
+                const hour = new Date().getHours(); let timeGreet = hour < 12 ? 'อรุณสวัสดิ์' : hour < 18 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น';
+                document.getElementById('greetText').innerHTML = `${timeGreet} ${wIcon} <span class="text-indigo-600">${userName}</span>`; document.getElementById('dashAlertText').innerHTML = `<span class="text-indigo-500 font-bold">${wMsg}</span>`;
+            } catch (e) { document.getElementById('dashAlertText').innerText = "ยินดีต้อนรับสู่ระบบ SmartHQ ครับ"; }
+        }
 
         function toggleAuth() { document.getElementById('loginForm').classList.toggle('hidden'); document.getElementById('registerForm').classList.toggle('hidden'); }
         function toggleDarkMode() { document.documentElement.classList.toggle('dark'); localStorage.setItem('smartOfficeTheme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); }
@@ -259,13 +237,7 @@
         function setupDashboard(user) {
             document.getElementById('login-section').classList.remove('page-active'); document.getElementById('login-section').style.display = 'none';
             document.querySelector('.splash-screen').style.display = 'none';
-            
-            document.getElementById('dashName').innerText = user.name.split(' ')[0];
-            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('dashDate').innerText = new Date().toLocaleDateString('th-TH', dateOptions);
-            const hour = new Date().getHours();
-            document.getElementById('greetText').innerHTML = (hour < 12 ? 'อรุณสวัสดิ์' : hour < 18 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น') + `, <span class="text-indigo-600">${user.name.split(' ')[0]}</span>`;
-
+            fetchWeather(user.name.split(' ')[0]);
             document.getElementById('topName').innerText = user.name; document.getElementById('topRole').innerText = user.role;
             document.getElementById('topAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff`;
             
@@ -280,7 +252,7 @@
 
         function navigate(page) {
             document.querySelectorAll('.page-section').forEach(e => e.classList.remove('page-active'));
-            if(page === 'profile') { const userRole = getDecryptedUser()?.role; if(userRole === 'Admin') page = 'settings'; } // แอดมินกดเมนูไปเข้าหน้าตั้งค่า
+            if(page === 'profile') { const userRole = getDecryptedUser()?.role; if(userRole === 'Admin') page = 'settings'; } 
             document.getElementById(`page-${page}`).classList.add('page-active');
             
             document.querySelectorAll('.nav-btn').forEach(btn => { if(!btn.id.includes('approval')) btn.classList.replace('text-indigo-600', 'text-slate-400') });
@@ -312,36 +284,48 @@
         async function handleRegister(e) { e.preventDefault(); const res = await req({ action: "register", empId: document.getElementById('regEmpId').value, name: document.getElementById('regName').value, department: document.getElementById('regDept').value, password: document.getElementById('regPassword').value }); Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status).then(()=>res.status==='success'&&toggleAuth()); }
         async function handleCheck(type) { if(!navigator.geolocation) return Swal.fire('Error','เปิด GPS ด้วยครับ','error'); Swal.fire({title:'กำลังบันทึกพิกัด...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()}); navigator.geolocation.getCurrentPosition(async (pos) => { const res = await req({ action: "checkInOut", empId: getDecryptedUser().empId, type: type, lat: pos.coords.latitude, lng: pos.coords.longitude }); Swal.fire('แจ้งเตือน', res.message, res.status).then(loadSummaryBoard); }, () => Swal.fire('Error','กรุณาอนุญาต GPS','error'), {enableHighAccuracy: true}); }
 
-        const getBadge = (s) => s==='Approved'?'<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md text-[10px] font-bold">อนุมัติ</span>':(s==='Rejected'?'<span class="bg-red-100 text-red-700 px-2 py-1 rounded-md text-[10px] font-bold">ไม่อนุมัติ</span>':'<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-md text-[10px] font-bold">รอตรวจ</span>');
+        // 💡 ป้ายสถานะเพิ่มสี Canceled
+        const getBadge = (s) => s==='Approved'?'<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md text-[10px] font-bold">อนุมัติ</span>':(s==='Rejected'?'<span class="bg-red-100 text-red-700 px-2 py-1 rounded-md text-[10px] font-bold">ไม่อนุมัติ</span>':(s==='Canceled'?'<span class="bg-gray-100 text-gray-500 px-2 py-1 rounded-md text-[10px] font-bold line-through">ยกเลิก</span>':'<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-md text-[10px] font-bold">รอตรวจ</span>'));
 
-        // 🚀 โหลด Summary Board ดึงข้อมูลก้อนเดียว
         async function loadSummaryBoard() {
             const user = getDecryptedUser(); if(!user) return;
             req({ action: "getSummaryBoard", empId: user.empId, role: user.role }, true).then(res => {
                 const d = res.data;
-                
-                // My Summary
                 document.getElementById('sumVacation').innerText = user.leaveVacation - d.stats.vacationUsed;
                 document.getElementById('sumPersonal').innerText = user.leavePersonal - d.stats.personalUsed;
                 document.getElementById('sumLate').innerText = d.stats.lateUsed;
 
-                // Smart Alerts
                 let alertsHTML = '';
-                if(d.alerts.pendingLeaves > 0) alertsHTML += `<div onclick="navigate('approval')" class="bg-amber-50 border border-amber-200 p-4 rounded-2xl cursor-pointer hover:bg-amber-100 transition"><p class="text-amber-700 font-bold text-sm"><i class="fa-solid fa-bell mr-2"></i>คุณมีคำขอรออนุมัติ ${d.alerts.pendingLeaves} รายการ</p></div>`;
-                if(d.alerts.pendingUsers > 0) alertsHTML += `<div onclick="navigate('settings')" class="bg-blue-50 border border-blue-200 p-4 rounded-2xl cursor-pointer hover:bg-blue-100 transition"><p class="text-blue-700 font-bold text-sm"><i class="fa-solid fa-user-plus mr-2"></i>มีพนักงานสมัครใหม่ ${d.alerts.pendingUsers} คน รออนุมัติใช้งาน</p></div>`;
+                if(d.alerts.pendingLeaves > 0) alertsHTML += `<div onclick="navigate('approval')" class="bg-amber-50 border border-amber-200 p-4 rounded-2xl cursor-pointer hover:bg-amber-100 transition"><p class="text-amber-700 font-bold text-sm"><i class="fa-solid fa-bell mr-2"></i>มีคำขอรอคุณอนุมัติ ${d.alerts.pendingLeaves} รายการ</p></div>`;
+                if(d.alerts.pendingUsers > 0) alertsHTML += `<div onclick="navigate('settings')" class="bg-blue-50 border border-blue-200 p-4 rounded-2xl cursor-pointer hover:bg-blue-100 transition"><p class="text-blue-700 font-bold text-sm"><i class="fa-solid fa-user-plus mr-2"></i>มีพนักงานใหม่ ${d.alerts.pendingUsers} คน รออนุมัติ</p></div>`;
                 document.getElementById('alertZone').innerHTML = alertsHTML;
 
-                // Today Logs & Info
                 document.getElementById('listTodayLogs').innerHTML = d.logs.map(l => `<li class="flex justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 items-center"><div><b class="text-slate-700 font-medium">${l.type}</b> <span class="text-xs ml-2 text-slate-400">${l.time} น.</span></div><span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md font-bold tracking-wider">${l.status}</span></li>`).join('') || '<li class="text-center text-slate-400 py-3 text-sm">ยังไม่มีประวัติวันนี้</li>';
                 document.getElementById('divHolidays').innerHTML = d.holidays.map(h => `<li class="flex items-center text-sm border-b border-slate-100 pb-3 mb-3 last:border-0 last:pb-0 last:mb-0"><span class="bg-red-50 text-red-600 font-semibold px-2 py-1.5 rounded-lg mr-3 w-12 text-center text-xs border border-red-100">${h.day} ${h.month}</span><span class="text-slate-600">${h.title}</span></li>`).join('');
                 document.getElementById('divNews').innerHTML = d.news.map(n => `<li class="border-b border-slate-100 pb-3 mb-3 last:border-0 last:pb-0 last:mb-0"><p class="text-[10px] text-blue-500 font-bold uppercase mb-0.5">${n.date}</p><p class="text-sm font-semibold text-slate-700">${n.title}</p><p class="text-xs text-slate-500 line-clamp-1 mt-0.5">${n.content}</p></li>`).join('');
                 
-                // Calendar
                 if(document.getElementById('page-calendar').classList.contains('page-active')) {
                     if(!fcCalendar) { fcCalendar = new FullCalendar.Calendar(document.getElementById('calendar'), { initialView: 'dayGridMonth', height: 'auto', headerToolbar: { left: 'title', right: 'prev,next' } }); fcCalendar.render(); }
                     fcCalendar.removeAllEvents(); fcCalendar.addEventSource(d.events);
                 }
+                
+                if(document.getElementById('page-leave').classList.contains('page-active')) {
+                    const drawChart = (ctx, label, total, used, color) => { const remain = total - used; if(window[ctx]) window[ctx].destroy(); window[ctx] = new Chart(document.getElementById(ctx), { type: 'doughnut', data: { labels: ['ใช้ไปแล้ว', 'คงเหลือ'], datasets: [{ data: [used, remain < 0 ? 0 : remain], backgroundColor: ['#f1f5f9', color], borderWidth: 0 }] }, options: { responsive: true, cutout: '78%', plugins: { legend: { display: false }, title: { display: true, text: `${label} (${remain}/${total})`, font: { family: 'Prompt', size: 11 }, color: '#64748b', padding: {bottom: -5} } } } }); };
+                    drawChart('vacationChart', 'พักร้อน', user.leaveVacation, d.stats.vacationUsed, '#6366f1'); drawChart('personalChart', 'ลากิจ', user.leavePersonal, d.stats.personalUsed, '#10b981');
+                    
+                    // 💡 แสดงตารางประวัติ และปุ่มยกเลิกถ้าเป็น Pending
+                    document.getElementById('tbMyLeaves').innerHTML = d.leaves.map(l => `<tr class="border-b border-slate-50"><td class="p-3 font-medium text-slate-600">${l.type}</td><td class="p-3 text-slate-500 text-xs">${l.date}</td><td class="p-3 text-center">${getBadge(l.status)} ${l.status==='Pending'?`<button onclick="cancelLeave(${l.row}, 'Leaves')" class="ml-2 text-xs text-red-500 hover:text-red-700 font-bold underline">ยกเลิก</button>`:''}</td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-400">ไม่มีประวัติ</td></tr>';
+                    calculateLeave();
+                }
             });
+        }
+
+        // 💡 [ใหม่] ฟังก์ชันให้พนักงานกดยกเลิกใบลาตัวเอง
+        async function cancelLeave(r, sheet) {
+            if(!confirm('ยืนยันยกเลิกคำขอลา? โควต้าจะถูกคืนกลับให้คุณทันที')) return;
+            const res = await req({ action: "cancelLeave", row: r, sheetName: sheet });
+            Toast.fire({ icon: 'success', title: res.message });
+            loadSummaryBoard(); 
         }
 
         function calculateLeave() { const startStr = document.getElementById('lvStart').value; const endStr = document.getElementById('lvEnd').value; const duration = document.getElementById('lvDuration').value; const btn = document.getElementById('btnSubmitLeave'); const resultTxt = document.getElementById('calcDays'); if(!startStr || !endStr || new Date(startStr) > new Date(endStr)) { resultTxt.innerText = "0"; btn.disabled = true; return; } if(startStr !== endStr && duration !== 'full') { Swal.fire('เตือน','ลาข้ามวันต้องเลือก "เต็มวัน" เท่านั้นครับ','info'); document.getElementById('lvDuration').value = 'full'; return calculateLeave(); } const restDaysArr = (getDecryptedUser().restDays || "0,6").split(',').map(Number); let totalDays = 0; let current = new Date(startStr); const end = new Date(endStr); while (current <= end) { if (!restDaysArr.includes(current.getDay())) totalDays += 1; current.setDate(current.getDate() + 1); } if (totalDays > 0 && duration !== 'full') totalDays = 0.5; resultTxt.innerText = totalDays; btn.disabled = totalDays <= 0; if(totalDays <= 0) btn.classList.add('opacity-50', 'cursor-not-allowed'); else btn.classList.remove('opacity-50', 'cursor-not-allowed'); }
@@ -351,28 +335,52 @@
             e.preventDefault(); const user = getDecryptedUser(); const calcDays = document.getElementById('calcDays').innerText;
             if(Number(calcDays) <= 0) return Swal.fire('Error', 'วันลาต้องมากกว่า 0', 'error');
             const payload = { action: "submitLeave", empId: user.empId, name: user.name, leaveType: document.getElementById('lvType').value, startDate: document.getElementById('lvStart').value, endDate: document.getElementById('lvEnd').value, days: calcDays + (document.getElementById('lvDuration').value === 'morning' ? ' (เช้า)' : document.getElementById('lvDuration').value === 'afternoon' ? ' (บ่าย)' : ''), reason: document.getElementById('lvReason').value, fileBase64: compressedBase64 };
-            Toast.fire({ icon: 'success', title: 'ส่งคำขอแล้ว กำลังอัปโหลดเอกสาร...' });
+            Toast.fire({ icon: 'success', title: 'ส่งคำขอแล้ว กำลังอัปโหลด...' });
             document.getElementById('leaveForm').reset(); compressedBase64 = null; document.getElementById('fileNameTxt').innerText = 'แนบเอกสาร (รูปภาพ)'; calculateLeave(); navigate('dashboard'); 
             req(payload, true).then(res => { if(res.status === 'success') { Toast.fire({ icon: 'success', title: 'อัปโหลดสำเร็จ' }); loadSummaryBoard(); } else Swal.fire('ข้อผิดพลาด', res.message, 'error'); });
         }
 
-        async function loadLateHistory() { const res = await req({ action: "getMyHistoryLate", empId: getDecryptedUser().empId }); Swal.close(); document.getElementById('tbMyLates').innerHTML = res.myLates.map(l => `<tr class="border-b border-slate-50"><td class="p-4 text-slate-500">${l.date}</td><td class="p-4 font-medium text-slate-700">${l.reason}</td><td class="p-4">${getBadge(l.status)}</td></tr>`).join('') || '<tr><td colspan="3" class="p-6 text-center text-slate-400">ไม่มีประวัติเข้าสาย</td></tr>'; }
+        async function loadLateHistory() { const res = await req({ action: "getMyHistoryLate", empId: getDecryptedUser().empId }); Swal.close(); document.getElementById('tbMyLates').innerHTML = res.myLates.map(l => `<tr class="border-b border-slate-50"><td class="p-4 text-slate-500">${l.date}</td><td class="p-4 font-medium text-slate-700">${l.reason}</td><td class="p-4 text-center">${getBadge(l.status)} ${l.status==='Pending'?`<button onclick="cancelLeave(${l.row}, 'LateRequests')" class="ml-2 text-xs text-red-500 hover:text-red-700 font-bold underline">ยกเลิก</button>`:''}</td></tr>`).join('') || '<tr><td colspan="3" class="p-6 text-center text-slate-400">ไม่มีประวัติเข้าสาย</td></tr>'; }
         async function handleLateSubmit(e) { e.preventDefault(); const res = await req({ action: "submitLate", empId: getDecryptedUser().empId, date: document.getElementById('ltDate').value, reason: document.getElementById('ltReason').value }); Swal.fire(res.status==='success'?'สำเร็จ':'ข้อผิดพลาด', res.message, res.status==='success'?'success':'warning'); document.getElementById('ltDate').parentElement.reset(); loadLateHistory(); loadSummaryBoard(); }
 
-        async function loadPendingApprovals() { const res = await req({ action: "getPendingApprovals" }); Swal.close(); const role = getDecryptedUser().role; document.getElementById('tbApproval').innerHTML = [...res.leaves, ...res.lates].map(i => `<tr class="border-b border-slate-50"><td class="p-4 font-semibold text-slate-700">${i.name}<br><span class="text-[10px] text-slate-400 font-normal">${i.empId}</span></td><td class="p-4"><span class="${i.type==='ขอเข้าสาย'?'bg-amber-50 text-amber-600 border border-amber-100':'bg-indigo-50 text-indigo-600 border border-indigo-100'} px-2 py-1 rounded text-[10px] font-bold tracking-wide">${i.type}</span><br><span class="text-xs font-semibold text-slate-500 mt-1 block">${i.days} วัน</span><p class="text-[10px] text-slate-400 mt-1 max-w-[120px] truncate">${i.reason}</p></td><td class="p-4 text-center">${i.fileUrl ? `<a href="${i.fileUrl}" target="_blank" class="text-slate-400 hover:text-indigo-500 text-xl transition-colors"><i class="fa-regular fa-image"></i></a>` : '-'}</td><td class="p-4 text-center"><button onclick="approve('${i.sheetName}', ${i.row}, '${role}', ${i.colManager}, ${i.colHR}, 'Approved')" class="bg-emerald-500 text-white w-8 h-8 rounded-full shadow-sm mr-1 active:scale-95"><i class="fa-solid fa-check"></i></button><button onclick="approve('${i.sheetName}', ${i.row}, '${role}', ${i.colManager}, ${i.colHR}, 'Rejected')" class="bg-red-500 text-white w-8 h-8 rounded-full shadow-sm active:scale-95"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('') || '<tr><td colspan="4" class="p-12 text-center text-slate-400"><i class="fa-regular fa-folder-open text-4xl mb-3 block opacity-30"></i> ไม่มีรายการรออนุมัติ</td></tr>'; }
+        async function loadPendingApprovals() { 
+            const user = getDecryptedUser();
+            const res = await req({ action: "getPendingApprovals", empId: user.empId, role: user.role }); Swal.close(); 
+            document.getElementById('tbApproval').innerHTML = [...res.leaves, ...res.lates].map(i => `<tr class="border-b border-slate-50"><td class="p-4 font-semibold text-slate-700">${i.name}<br><span class="text-[10px] text-slate-400 font-normal">${i.empId}</span></td><td class="p-4"><span class="${i.type==='ขอเข้าสาย'?'bg-amber-50 text-amber-600 border border-amber-100':'bg-indigo-50 text-indigo-600 border border-indigo-100'} px-2 py-1 rounded text-[10px] font-bold tracking-wide">${i.type}</span><br><span class="text-xs font-semibold text-slate-500 mt-1 block">${i.days} วัน</span><p class="text-[10px] text-slate-400 mt-1 max-w-[120px] truncate">${i.reason}</p></td><td class="p-4 text-center">${i.fileUrl ? `<a href="${i.fileUrl}" target="_blank" class="text-slate-400 hover:text-indigo-500 text-xl transition-colors"><i class="fa-regular fa-image"></i></a>` : '-'}</td><td class="p-4 text-center"><button onclick="approve('${i.sheetName}', ${i.row}, '${user.role}', ${i.colManager}, ${i.colHR}, 'Approved')" class="bg-emerald-500 text-white w-8 h-8 rounded-full shadow-sm mr-1 active:scale-95"><i class="fa-solid fa-check"></i></button><button onclick="approve('${i.sheetName}', ${i.row}, '${user.role}', ${i.colManager}, ${i.colHR}, 'Rejected')" class="bg-red-500 text-white w-8 h-8 rounded-full shadow-sm active:scale-95"><i class="fa-solid fa-xmark"></i></button></td></tr>`).join('') || '<tr><td colspan="4" class="p-12 text-center text-slate-400"><i class="fa-regular fa-folder-open text-4xl mb-3 block opacity-30"></i> ไม่มีรายการรออนุมัติ</td></tr>'; 
+        }
         async function approve(s, r, role, cM, cH, st) { const res = await req({ action: "updateApproval", sheetName: s, row: r, role: role, colManager: cM, colHR: cH, status: st }); Toast.fire({ icon: 'success', title: res.message }); loadPendingApprovals(); loadSummaryBoard(); }
 
-        // ⚙️ SETTINGS & ADMIN FUNCTIONS
-        async function loadSettings() {
-            const res = await req({ action: "getSettingsData" }); Swal.close();
-            document.getElementById('tbGeofence').innerHTML = res.geofences.map(g => `<tr class="border-b"><td class="p-3 font-mono text-xs text-slate-600">${g.lat}, ${g.lng}</td><td class="p-3 text-indigo-600 font-bold">${g.radius} ม.</td><td class="p-3 text-center"><button onclick="delGeofence(${g.row})" class="text-red-400 hover:text-red-600"><i class="fa-regular fa-trash-can"></i></button></td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-400 text-xs">ยังไม่มีพิกัดสาขา</td></tr>';
+        // 💡 [ใหม่] Admin โหลดการตั้งค่า ข่าวสาร และวันหยุดมาโชว์ให้ลบได้
+        async function loadSettings() { 
+            req({ action: "getSummaryBoard", empId: 'admin', role: 'Admin' }, true).then(res => {
+                document.getElementById('listSettingHolidays').innerHTML = res.data.holidays.map(h => `<li class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100"><span><span class="text-red-500 font-bold mr-2">${h.day} ${h.month}</span>${h.title}</span><button onclick="delData(${h.row}, 'deleteHoliday')" class="text-red-400 hover:text-red-600 px-2"><i class="fa-regular fa-trash-can"></i></button></li>`).join('');
+                document.getElementById('listSettingNews').innerHTML = res.data.news.map(n => `<li class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100"><div><span class="text-blue-500 font-bold mr-2 text-[10px]">${n.date}</span><span class="text-xs font-semibold">${n.title}</span></div><button onclick="delData(${n.row}, 'deleteNews')" class="text-red-400 hover:text-red-600 px-2"><i class="fa-regular fa-trash-can"></i></button></li>`).join('');
+            });
+            const res = await req({ action: "getSettingsData" }); Swal.close(); 
+            document.getElementById('tbGeofence').innerHTML = res.geofences.map(g => `<tr class="border-b"><td class="p-3 font-mono text-xs text-slate-600">${g.lat}, ${g.lng}</td><td class="p-3 text-indigo-600 font-bold">${g.radius} ม.</td><td class="p-3 text-center"><button onclick="delData(${g.row}, 'deleteGeofence')" class="text-red-400 hover:text-red-600"><i class="fa-regular fa-trash-can"></i></button></td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-400 text-xs">ยังไม่มีพิกัดสาขา</td></tr>'; 
         }
-        async function handleAddGeofence(e) { e.preventDefault(); const res = await req({ action: "addGeofence", lat: document.getElementById('gLat').value, lng: document.getElementById('gLng').value, radius: document.getElementById('gRad').value }); Toast.fire({ icon: 'success', title: res.message }); document.getElementById('gLat').parentElement.reset(); loadSettings(); }
-        async function delGeofence(r) { if(!confirm('ลบพิกัดนี้?')) return; const res = await req({ action: "deleteGeofence", row: r }); Toast.fire({ icon: 'success', title: res.message }); loadSettings(); }
-        async function handleResetLeaves() { if(confirm('⚠️ อันตราย! ยืนยันการรีเซ็ตโควต้าพนักงานทุกคน?')) { const res = await req({ action: "resetYearlyLeaves" }); Swal.fire('สำเร็จ', res.message, 'success'); } }
-        async function handleAddNews(e) { e.preventDefault(); const res = await req({ action: "addNews", date: document.getElementById('nDate').value, title: document.getElementById('nTitle').value, content: document.getElementById('nContent').value, author: getDecryptedUser().name }); Toast.fire({ icon: 'success', title: res.message }); if(res.status==='success') e.target.reset(); }
         
-        async function loadAdminUsers() { const res = await req({ action: "getAllUsers" }); Swal.close(); document.getElementById('tbAdmin').innerHTML = res.users.map(u => `<tr class="border-b border-slate-50 hover:bg-slate-50"><td class="p-4 font-semibold text-slate-700">${u.empId}</td><td class="p-4 text-slate-600">${u.name}</td><td class="p-4 text-[10px] font-bold text-indigo-500 tracking-wider">${u.role}</td><td class="p-4 text-xs text-slate-500">หยุด ${u.restDays}</td><td class="p-4"><span class="${u.status==='Active'?'text-emerald-600':'text-amber-500'} font-semibold text-xs">${u.status}</span></td><td class="p-4 text-center">${u.status==='Pending'?`<button onclick="adminAct('${u.empId}','approve')" class="bg-emerald-500 text-white p-1.5 px-3 rounded-lg text-[10px] mr-1 font-bold">อนุมัติ</button>`:''}<button onclick="adminAct('${u.empId}','delete')" class="text-red-400 hover:text-red-600 p-2"><i class="fa-regular fa-trash-can"></i></button></td></tr>`).join(''); }
+        async function handleAddGeofence(e) { e.preventDefault(); const res = await req({ action: "addGeofence", lat: document.getElementById('gLat').value, lng: document.getElementById('gLng').value, radius: document.getElementById('gRad').value }); Toast.fire({ icon: 'success', title: res.message }); document.getElementById('gLat').parentElement.reset(); loadSettings(); }
+        async function delData(r, action) { if(!confirm('ยืนยันการลบ?')) return; const res = await req({ action: action, row: r }); Toast.fire({ icon: 'success', title: res.message }); loadSettings(); }
+        async function handleResetLeaves() { if(confirm('⚠️ อันตราย! ยืนยันการรีเซ็ตโควต้าทุกคน?')) { const res = await req({ action: "resetYearlyLeaves" }); Swal.fire('สำเร็จ', res.message, 'success'); } }
+        async function handleAddNews(e) { e.preventDefault(); const res = await req({ action: "addNews", date: document.getElementById('nDate').value, title: document.getElementById('nTitle').value, content: document.getElementById('nContent').value, author: getDecryptedUser().name }); Toast.fire({ icon: 'success', title: res.message }); loadSettings(); e.target.reset(); }
+        
+        // 💡 [ใหม่] Admin Edit User Button
+        async function loadAdminUsers() { const res = await req({ action: "getAllUsers" }); Swal.close(); document.getElementById('tbAdmin').innerHTML = res.users.map(u => `<tr class="border-b border-slate-50 hover:bg-slate-50"><td class="p-4 font-semibold text-slate-700">${u.empId}</td><td class="p-4 text-slate-600">${u.name}</td><td class="p-4 text-[10px] font-bold text-indigo-500 tracking-wider">${u.role}</td><td class="p-4 text-slate-600 text-xs">${u.managerId || '-'}</td><td class="p-4 text-center font-bold text-indigo-600 text-xs">${u.vacation}/${u.personal}</td><td class="p-4"><span class="${u.status==='Active'?'text-emerald-600':'text-amber-500'} font-semibold text-xs">${u.status}</span></td><td class="p-4 text-center">${u.status==='Pending'?`<button onclick="adminAct('${u.empId}','approve')" class="bg-emerald-500 text-white p-1.5 px-3 rounded-lg text-[10px] mr-1 font-bold">อนุมัติ</button>`:''}<button onclick="openEditUser('${u.empId}', '${u.name}', '${u.role}', ${u.vacation}, ${u.personal}, '${u.restDays}', '${u.managerId}')" class="text-indigo-500 hover:text-indigo-700 p-2"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="adminAct('${u.empId}','delete')" class="text-red-400 hover:text-red-600 p-2"><i class="fa-regular fa-trash-can"></i></button></td></tr>`).join(''); }
+        
+        // 💡 [ใหม่] Popup สำหรับแก้ไขพนักงาน
+        async function openEditUser(empId, name, role, vac, per, rest, mng) {
+            const { value: f } = await Swal.fire({ title: 'แก้ไข: ' + name, html:
+                `<div class="text-left text-sm font-bold text-slate-600 mb-1">สิทธิ์ (User/Manager/HR/Admin)</div><input id="swal-role" class="swal2-input !mt-0 !mb-3" value="${role}">` +
+                `<div class="flex gap-2"><div class="w-1/2"><div class="text-left text-sm font-bold text-slate-600 mb-1">พักร้อน</div><input id="swal-vac" type="number" class="swal2-input !w-full !m-0" value="${vac}"></div><div class="w-1/2"><div class="text-left text-sm font-bold text-slate-600 mb-1">ลากิจ</div><input id="swal-per" type="number" class="swal2-input !w-full !m-0" value="${per}"></div></div>` +
+                `<div class="text-left text-sm font-bold text-slate-600 mt-3 mb-1">วันหยุด (0=อาทิตย์, 6=เสาร์)</div><input id="swal-rest" class="swal2-input !mt-0 !mb-3" value="${rest}">` +
+                `<div class="text-left text-sm font-bold text-slate-600 mb-1">รหัสหัวหน้างาน</div><input id="swal-mng" class="swal2-input !mt-0" value="${mng}">`,
+                focusConfirm: false, showCancelButton: true, confirmButtonText: 'บันทึก', cancelButtonText: 'ยกเลิก',
+                preConfirm: () => { return { role: document.getElementById('swal-role').value, vac: document.getElementById('swal-vac').value, per: document.getElementById('swal-per').value, rest: document.getElementById('swal-rest').value, mng: document.getElementById('swal-mng').value } }
+            });
+            if(f) { const res = await req({ action: "adminManageUser", targetEmpId: empId, subAction: "edit", ...f }); Toast.fire({icon:'success', title:res.message}); loadAdminUsers(); }
+        }
+
         async function adminAct(id, act) { if(!confirm('ยืนยัน?')) return; const res = await req({ action: "adminManageUser", targetEmpId: id, subAction: act }); Toast.fire({ icon: 'success', title: res.message }); loadAdminUsers(); loadSummaryBoard(); }
         function exportTableToCSV(filename) { let csv = []; document.querySelectorAll("#page-admin table tr").forEach(row => { let cols = row.querySelectorAll("td, th"); let rowData = []; for (let j=0; j<cols.length-1; j++) rowData.push('"' + cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "") + '"'); csv.push(rowData.join(",")); }); const link = document.createElement("a"); link.href = window.URL.createObjectURL(new Blob(["\ufeff" + csv.join("\n")], {type: "text/csv;charset=utf-8;"})); link.download = filename; link.click(); }
         
