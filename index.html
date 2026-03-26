@@ -15,12 +15,10 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     
     <style>
-        /* 🔤 ปรับฟอนต์ให้ซอฟต์ลง อ่านง่าย สบายตา */
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Prompt', sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; color: #334155; }
         ::-webkit-scrollbar { display: none; }
         
-        /* 📱 แอนิเมชันตอนสลับหน้า */
         .page-section { display: none !important; animation: fadeIn 0.4s ease-out forwards; } 
         .page-active { display: block !important; }
         #login-section.page-active { display: flex !important; animation: none; }
@@ -30,7 +28,6 @@
         .splash-screen { animation: fadeOut 0.5s ease-out 1.2s forwards; }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
         
-        /* 🗓️ ปฏิทิน */
         .fc { font-family: 'Prompt', sans-serif; font-size: 0.85rem; background: #fff; padding: 15px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); border: 1px solid #f1f5f9; }
         .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 600 !important; color: #4338ca; }
     </style>
@@ -83,8 +80,20 @@
     <main class="flex-1 flex flex-col h-screen overflow-y-auto pb-24 md:pb-0 relative w-full">
         
         <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-40 px-6 py-4 flex justify-between items-center border-b border-slate-200 shadow-sm">
-            <div class="font-bold text-xl text-indigo-700 flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> SmartHQ</div>
             
+            <div class="flex items-center gap-6">
+                <div class="font-bold text-xl text-indigo-700 flex items-center gap-2 cursor-pointer" onclick="navigate('dashboard')">
+                    <i class="fa-solid fa-layer-group"></i> SmartHQ
+                </div>
+                
+                <nav class="hidden md:flex items-center gap-2">
+                    <button onclick="navigate('dashboard')" class="nav-btn-desk px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg transition-colors"><i class="fa-solid fa-house mr-1.5"></i>หน้าแรก</button>
+                    <button onclick="navigate('calendar')" class="nav-btn-desk px-4 py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-colors"><i class="fa-regular fa-calendar-days mr-1.5"></i>ปฏิทิน</button>
+                    <button onclick="navigate('leave')" class="nav-btn-desk px-4 py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-colors"><i class="fa-solid fa-plus mr-1.5"></i>ขอลา</button>
+                    <button onclick="navigate('approval')" id="menu-approval-desk" class="hidden nav-btn-desk px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"><i class="fa-solid fa-clipboard-check mr-1.5"></i>อนุมัติ</button>
+                </nav>
+            </div>
+
             <div class="flex items-center gap-5">
                 <button onclick="navigate('admin')" id="topSettingsBtn" class="hidden text-slate-400 hover:text-indigo-600 transition-colors tooltip" title="ตั้งค่าระบบ"><i class="fa-solid fa-gear text-xl"></i></button>
                 
@@ -230,7 +239,6 @@
         const setEncryptedUser = (user) => localStorage.setItem('secureHQUser', btoa(encodeURIComponent(JSON.stringify(user))));
         const getDecryptedUser = () => { try { return JSON.parse(decodeURIComponent(atob(localStorage.getItem('secureHQUser')))); } catch(e) { return null; } };
         
-        // ✨ สร้าง Toast Notification สำหรับ Background Process
         const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
         
         let vChart, pChart, fcCalendar, compressedBase64 = null;
@@ -256,7 +264,11 @@
             document.getElementById('topRole').innerText = user.role;
             document.getElementById('topAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff`;
             
-            if(['Manager', 'HR', 'Admin'].includes(user.role)) { document.getElementById('menu-approval-mob').classList.remove('hidden'); document.getElementById('menu-approval-mob').classList.add('flex'); }
+            // เปิดสิทธิ์สำหรับเมนูมือถือ และ คอมพิวเตอร์
+            if(['Manager', 'HR', 'Admin'].includes(user.role)) { 
+                document.getElementById('menu-approval-mob').classList.remove('hidden'); document.getElementById('menu-approval-mob').classList.add('flex');
+                document.getElementById('menu-approval-desk').classList.remove('hidden'); 
+            }
             if(user.role === 'Admin') document.getElementById('topSettingsBtn').classList.remove('hidden');
             
             navigate('dashboard');
@@ -266,8 +278,17 @@
             document.querySelectorAll('.page-section').forEach(e => e.classList.remove('page-active'));
             document.getElementById(`page-${page}`).classList.add('page-active');
             
+            // อัปเดตสีเมนูสำหรับมือถือ
             document.querySelectorAll('.nav-btn').forEach(btn => { if(!btn.id.includes('approval')) btn.classList.replace('text-indigo-600', 'text-slate-400') });
             if(event && event.currentTarget.classList.contains('nav-btn') && !event.currentTarget.id.includes('approval')) event.currentTarget.classList.replace('text-slate-400', 'text-indigo-600');
+            
+            // อัปเดตสีเมนูสำหรับคอมพิวเตอร์ (Desktop)
+            document.querySelectorAll('.nav-btn-desk').forEach(btn => { 
+                if(!btn.id.includes('approval')) { btn.classList.remove('text-indigo-600', 'bg-indigo-50'); btn.classList.add('text-slate-500'); }
+            });
+            if(event && event.currentTarget.classList.contains('nav-btn-desk') && !event.currentTarget.id.includes('approval')) {
+                event.currentTarget.classList.remove('text-slate-500'); event.currentTarget.classList.add('text-indigo-600', 'bg-indigo-50');
+            }
             
             if(['dashboard', 'calendar', 'leave'].includes(page)) loadMainData();
             if(page === 'approval') loadPendingApprovals();
@@ -275,7 +296,6 @@
             if(page === 'profile') loadProfileData();
         }
 
-        // 🚀 ฟังก์ชัน Request ที่รองรับ Background Processing
         async function req(data, isBackground = false) {
             if(!isBackground) Swal.fire({ title: 'กำลังโหลด...', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
             else Toast.fire({ icon: 'info', title: 'กำลังดำเนินการในพื้นหลัง...' });
@@ -299,14 +319,12 @@
 
         async function loadMainData() {
             const user = getDecryptedUser(); if(!user) return;
-            // โหลด Background เพื่อไม่ให้หน้าจอกระตุก
             req({ action: "getDashboardAndCalendar", empId: user.empId }, true).then(res => {
                 document.getElementById('listTodayLogs').innerHTML = res.logs.map(l => `<li class="flex justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 items-center"><div><b class="text-slate-700 font-medium">${l.type}</b> <span class="text-xs ml-2 text-slate-400">${l.time} น.</span></div><span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md font-bold tracking-wider">${l.status}</span></li>`).join('') || '<li class="text-center text-slate-400 py-3 text-sm">ยังไม่มีประวัติวันนี้</li>';
                 document.getElementById('divHolidays').innerHTML = res.holidays.map(h => `<li class="flex items-center text-sm border-b border-slate-100 pb-3 mb-3 last:border-0 last:pb-0 last:mb-0"><span class="bg-red-50 text-red-600 font-semibold px-2 py-1.5 rounded-lg mr-3 w-12 text-center text-xs border border-red-100">${h.day} ${h.month}</span><span class="text-slate-600">${h.title}</span></li>`).join('');
                 document.getElementById('divNews').innerHTML = res.news.map(n => `<li class="border-b border-slate-100 pb-3 mb-3 last:border-0 last:pb-0 last:mb-0"><p class="text-[10px] text-blue-500 font-bold uppercase mb-0.5">${n.date}</p><p class="text-sm font-semibold text-slate-700">${n.title}</p><p class="text-xs text-slate-500 line-clamp-1 mt-0.5">${n.content}</p></li>`).join('');
                 
                 if(document.getElementById('page-calendar').classList.contains('page-active')) {
-                    document.getElementById('tbMyLeaves').innerHTML = res.leaves.map(l => `<tr class="border-b border-slate-50"><td class="p-3 font-medium text-slate-600">${l.type}</td><td class="p-3 text-slate-500 text-xs">${l.date}</td><td class="p-3 text-center">${getBadge(l.status)}</td></tr>`).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-400">ไม่มีประวัติ</td></tr>';
                     if(!fcCalendar) { fcCalendar = new FullCalendar.Calendar(document.getElementById('calendar'), { initialView: 'dayGridMonth', height: 'auto', headerToolbar: { left: 'title', right: 'prev,next' } }); fcCalendar.render(); }
                     fcCalendar.removeAllEvents(); fcCalendar.addEventSource(res.events);
                 }
@@ -348,19 +366,16 @@
             }
         }
 
-        // 🚀 Background Upload (Optimistic UI)
         function handleLeaveSubmit(e) { 
             e.preventDefault(); const user = getDecryptedUser(); const calcDays = document.getElementById('calcDays').innerText;
             if(Number(calcDays) <= 0) return Swal.fire('Error', 'วันลาต้องมากกว่า 0', 'error');
 
             const payload = { action: "submitLeave", empId: user.empId, name: user.name, leaveType: document.getElementById('lvType').value, startDate: document.getElementById('lvStart').value, endDate: document.getElementById('lvEnd').value, days: calcDays + (document.getElementById('lvDuration').value === 'morning' ? ' (เช้า)' : document.getElementById('lvDuration').value === 'afternoon' ? ' (บ่าย)' : ''), reason: document.getElementById('lvReason').value, fileBase64: compressedBase64 };
             
-            // เปลี่ยนหน้าทันที ไม่ต้องรอดาวน์โหลด
-            Toast.fire({ icon: 'success', title: 'ส่งคำขอแล้ว กำลังอัปโหลดเอกสารพื้นหลัง' });
+            Toast.fire({ icon: 'success', title: 'ส่งคำขอแล้ว กำลังอัปโหลดเอกสาร...' });
             document.getElementById('leaveForm').reset(); compressedBase64 = null; document.getElementById('fileNameTxt').innerText = 'แนบใบรับรองแพทย์/เอกสาร (รูปภาพ)'; calculateLeave();
             navigate('calendar'); 
 
-            // ส่งข้อมูลไปเบื้องหลัง
             req(payload, true).then(res => { if(res.status === 'success') { Toast.fire({ icon: 'success', title: 'อัปโหลดเอกสารสมบูรณ์' }); loadMainData(); } else { Swal.fire('ข้อผิดพลาด', res.message, 'error'); } });
         }
 
