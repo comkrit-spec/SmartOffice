@@ -629,7 +629,7 @@
 
     <script>
         // *** สำคัญที่สุด: ใส่ลิงก์ GAS ของคุณที่นี่ ***
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzhm8RBGlPnm1u4DnRIQ1LQU-23xTBxmrBuXy1H1mgcd3xpgQ-lRZ49_E7pHLEjT2Zc9A/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyXgTpQbeWDw9DZV6VIEErr6h_zYZUJa_6QOrV67_V6EIP4KbhLZqTFmvKNDUQx61bpIA/exec";
         
         const setEncryptedUser = (user) => localStorage.setItem('secureHQUser', btoa(encodeURIComponent(JSON.stringify(user))));
         const getDecryptedUser = () => { try { return JSON.parse(decodeURIComponent(atob(localStorage.getItem('secureHQUser')))); } catch(e) { return null; } };
